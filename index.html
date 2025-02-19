@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pac-Man</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 97vh;
+            background-color: #111;
+            color: whitesmoke;
+            margin: 0;
+        }
+        
+        .subject {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid white;
+            /* padding: 10px; */
+            /* background: rgba(255, 255, 255, 0.1); */
+        }
+
+        .subject-header, .subject-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* text-align: center; */
+            /* padding: 10px; */
+            width: 100%;
+        }
+        .handle-score {
+            columns: 2;
+            width: 100%;
+            flex-direction: row;
+            justify-content:space-between ;
+          
+            
+        }
+        .score {
+            display: flex;
+            justify-content: flex-start;
+            margin-left: 2rem;
+            justify-content:space-between ;
+        }
+        .time {
+            display: flex;
+            justify-content: flex-end;
+            margin-right: 2rem;
+        }
+
+        .subject-body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* padding: 10px; */
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(21, auto);
+            grid-template-rows: repeat(21, auto);
+            /* gap: 2px; */
+            width: auto;
+            height: auto;
+            position: relative;
+            /* background-color: #111;             */
+        }
+
+        .cell {
+            width: 20px;
+            height: 20px;
+            /* border: 1px solid white; */
+            /* background-color: #111; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .dot {
+            
+            background-color: whitesmoke;
+            border-radius: 50%;
+            width: 4px;
+            height: 4px;
+        }
+
+        .wall {
+            background-color: blue;
+        }
+
+        .pacman {
+            /* background-color: yellow; */
+            /* border-radius: 50%; */
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            transition: top 0.15s linear, left 0.15s linear;
+
+            background-image: url('your-sprite-sheet.png'); 
+            background-size: 120px 20px; /* Full sprite sheet width */
+            background-position: 20px 20px; /* Start from first frame */
+
+        }
+        .redGhost {
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            /* z-index: 1; */
+            transition: top 0.15s linear, left 0.15s linear;
+        }
+        .bleuGhost {
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            /* z-index: 1; */
+            transition: top 0.15s linear, left 0.15s linear;
+        }
+        .orangeGhost {
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            /* z-index: 1; */
+            transition: top 0.15s linear, left 0.15s linear;
+        }
+        .pinkGhost {
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            /* z-index: 1; */
+            transition: top 0.15s linear, left 0.15s linear;
+        }
+        .darkBleuGhost {
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            /* z-index: 1; */
+            transition: top 0.15s linear, left 0.15s linear;
+        }
+
+        img {
+            width: 20px;
+            height: 20px;
+        }
+        
+        
+    </style>
+</head>
+<body>
+    <div class="subject">
+        <div class="subject-header">
+            <div class="title-game"><img src="pacManTitle.png" style="width: 24rem; height: 6rem;"></div>
+            <div class="handle-score">
+                <div class="score">score: <span id="score"> 0000</span></div>
+                <div class="time">time: <span id="time">  00:00</span></div>
+            </div>
+        </div>
+        <div class="subject-body">
+            <div class="game-board" id="game-board"></div>
+        </div>
+        <div class="subject-footer">
+            <div class="handle-score">                
+                <div class="score" style="margin: 0;">
+                    <img src="pacmansolo.png" style="width: 2rem; height: 2rem;" >
+                    <img src="pacmansolo.png" style="width: 2rem; height: 2rem;" >
+                    <img src="pacmansolo.png" style="width: 2rem; height: 2rem;" >
+                    <img src="pacmansolo.png" style="width: 2rem; height: 2rem;" >
+                    <img src="pacmansolo.png" style="width: 2rem; height: 2rem;" >
+                </div>
+                <div class="time">time:</div>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pac-man</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            justify-items: center;
+            align-content: center;
+            background-color: #111;
+            color: whitesmoke;
+            height: 97vh;
+        }
+        
+        .subject {
+            justify-items: center;
+            align-content: center;
+            border: white 2px solid;
+            width: 80%;
+            height: 90%;
+        }
+        .subject-header {
+            justify-items: center;
+            align-content: center;
+            border: white 2px solid;
+            width: 100%;
+        }
+        .subject-body {
+            justify-items: center;
+            justify-content: center;
+            align-content: center;
+            border: white 2px solid;
+            width: auto;
+            height: 80%;
+        }
+        .game-board {
+            display: grid;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            /* gap: 2px; */
+            grid-template-columns: repeat(20, auto);
+            grid-template-rows: repeat(20, auto);
+            /* gap: 10px; */
+            /* margin: 20px auto; */
+            width: 30rem;
+            height: 30rem;
+            background-color: rgba(7, 2, 20, 0.432);            
+        }
+        .subject-fouter {
+            justify-items: center;
+            align-content: center;
+            border: white 2px solid;
+            width: 100%;
+        }
+        .pacman {
+            background-color: yellow;
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            /* z-index: 0; */
+            transition: top 1s ease-in-out, left 1s ease-in-out; /* Smooth transition */
+        }
+        .cell {
+            border: white solid 0.1rem;
+            width: 20px;
+            height: 20px;
+            background-color: rgba(240, 248, 255, 0.226);
+        }
+        .wall {
+            background-color: blue;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="subject" id="subject">
+        <div class="subject-header">
+            <p>head</p>
+        </div>
+        <div class="subject-body">
+            <div class="game-board" id="game-board">
+            </div>
+        </div>
+        <div class="subject-fouter">
+            <p>fouter</p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html> -->
+
+
+    <!-- .dot {
+        width: 10px;
+        height: 10px;
+        background-color: white;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    } -->
