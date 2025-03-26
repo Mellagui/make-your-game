@@ -37,15 +37,13 @@
             columns: 2;
             width: 100%;
             flex-direction: row;
-            justify-content:space-between ;
-          
-            
+            justify-content:space-between;
         }
         .score {
             display: flex;
             justify-content: flex-start;
             margin-left: 2rem;
-            justify-content:space-between ;
+            justify-content:space-between;
         }
         .time {
             display: flex;
@@ -81,6 +79,8 @@
             align-items: center;
         }
         .dot {
+            margin-top: 9px;
+            margin-left: 9px;
             
             background-color: whitesmoke;
             border-radius: 50%;
@@ -91,59 +91,27 @@
         .wall {
             background-color: blue;
         }
-
-        .pacman {
-            /* background-color: yellow; */
-            /* border-radius: 50%; */
+        
+        .redGhost, .bleuGhost, .orangeGhost,
+        .pinkGhost, .darkGhost, .pacMan {
+            border-radius: 50%;
             width: 20px;
             height: 20px;
             position: absolute;
+            /* z-index: 1; */
             transition: top 0.15s linear, left 0.15s linear;
-
-            background-image: url('your-sprite-sheet.png'); 
+        }
+        .pacMan {
+            background-image: url('pacMan-solo.png'); 
             background-size: 120px 20px; /* Full sprite sheet width */
             background-position: 20px 20px; /* Start from first frame */
 
-        }
-        .redGhost {
-            border-radius: 50%;
-            width: 20px;
+            /* background-color: yellow;*/
+            /* border-radius: 50%; */
+            /*width: 20px;
             height: 20px;
             position: absolute;
-            /* z-index: 1; */
-            transition: top 0.15s linear, left 0.15s linear;
-        }
-        .bleuGhost {
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            position: absolute;
-            /* z-index: 1; */
-            transition: top 0.15s linear, left 0.15s linear;
-        }
-        .orangeGhost {
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            position: absolute;
-            /* z-index: 1; */
-            transition: top 0.15s linear, left 0.15s linear;
-        }
-        .pinkGhost {
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            position: absolute;
-            /* z-index: 1; */
-            transition: top 0.15s linear, left 0.15s linear;
-        }
-        .darkBleuGhost {
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            position: absolute;
-            /* z-index: 1; */
-            transition: top 0.15s linear, left 0.15s linear;
+            transition: top 0.15s linear, left 0.15s linear; */
         }
 
         img {
@@ -169,17 +137,18 @@
         <div class="subject-footer">
             <div class="handle-score">                
                 <div class="score" style="margin: 0;">
-                    <img src="pacmansolo.png" style="width: 2rem; height: 2rem;" >
-                    <img src="pacmansolo.png" style="width: 2rem; height: 2rem;" >
-                    <img src="pacmansolo.png" style="width: 2rem; height: 2rem;" >
-                    <img src="pacmansolo.png" style="width: 2rem; height: 2rem;" >
-                    <img src="pacmansolo.png" style="width: 2rem; height: 2rem;" >
+                    <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                    <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                    <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                    <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                    <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
                 </div>
-                <div class="time">time:</div>
+                <!-- <div class="time">time:</div> -->
             </div>
         </div>
     </div>
     <script src="script.js"></script>
+    <!-- <script src="pacman.js"></script> -->
 </body>
 </html>
 

@@ -43,313 +43,315 @@
 // ];
 
 const map = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], // 21 * 21
-             [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+             [1,2,0,0,0,2,0,0,0,2,1,2,0,0,0,2,0,0,0,2,1],
              [1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1],
-             [1,0,1,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1],
+             [1,0,1,2,0,2,1,2,0,2,1,0,1,2,0,2,1,2,0,2,1],
              [1,0,1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1],
-             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+             [1,2,0,2,0,0,0,2,0,2,0,2,0,2,0,0,0,2,0,2,1],
              [1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1,0,1],
-             [1,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,1],
+             [1,2,0,2,1,2,0,2,1,0,1,2,0,2,1,2,0,2,1,0,1],
              [1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1],
-             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+             [1,2,0,0,0,2,0,0,0,2,0,2,0,0,0,2,0,0,0,2,1],
              [1,1,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,1,1],
-             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+             [1,2,0,0,0,2,0,0,0,2,0,2,0,0,0,2,0,0,0,2,1],
              [1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1],
-             [1,0,1,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1],
+             [1,0,1,2,0,2,1,2,0,2,1,0,1,2,0,2,1,2,0,2,1],
              [1,0,1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1],
-             [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],
+             [1,2,0,2,0,0,0,2,0,2,0,2,0,2,0,0,0,2,0,2,1],
              [1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1,0,1],
-             [1,0,0,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,1],
+             [1,2,0,2,1,2,0,2,1,0,1,2,0,2,1,2,0,2,1,0,1],
              [1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1],
-             [1,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1],
+             [1,2,0,0,0,2,0,0,0,2,1,2,0,0,0,2,0,0,0,2,1],
              [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]];
 
 const gameBoard = document.getElementById("game-board");
 const rows = 21;
 const cols = 21;
 
+const pacLife = document.querySelectorAll('.pacLife')
+
+
+let randomDirectionPM = true
 let score = 0;
+let time = 0;
+let inGame = false;
+let gameover = false;
 
-let pacmanPosition = { x: 10, y: 5 };
-let redGhostPosition = { x:4, y: 5};
-let bleuGhostPosition = { x:17, y: 5};
-let orangeGhostPosition = { x:4, y: 15};
-let pinkGhostPosition = { x:17, y: 15};
-let darkBleuGhostPosition = { x:9, y: 13};
-
-let pacmanDirection = ''; // default movement direction
-let redGhostDirection = 'right'; // default movement direction
-let bleuGhostDirection = 'left';
-let orangeGhostDirection = 'right';
-let pinkGhostDirection = 'left';
-let darkBleuGhostDirection = 'up';
+// Pac-Man | Ghosts
+const pacmanClass = {
+    name: 'pacMan',
+    life: 5,
+    position: { x: 10, y: 5 },
+    nextPosition: {x: 10, y: 5},
+    direction: '',
+    nextDirection: ''
+}
+const redGhostClass = {
+    name: 'redGhost',
+    position: { x:4, y: 5},
+    nextPosition: { x:4, y: 5},
+    direction: 'right',
+}
+const bleuGhostClass = {
+    name: 'bleuGhost',
+    position: { x:17, y: 5},
+    nextPosition: {x: 17, y: 5},
+    direction: 'left',
+}
+const orangeGhostClass = {
+    name: 'orangeGhost',
+    position: { x:4, y: 15},
+    nextPosition: { x:4, y: 15},
+    direction: 'right',
+}
+const pinkGhostClass = {
+    name: 'pinkGhost',
+    position: { x:17, y: 15},
+    nextPosition: { x:17, y: 15},
+    direction: 'left',
+}
+const darkGhostClass = {
+    name: 'darkGhost',
+    position: { x:9, y: 13},
+    nextPosition: { x:9, y: 13},
+    direction: 'up',
+}
 
 // Generate grid cells
 for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
         const cell = document.createElement("div");
         cell.classList.add("cell");
+
         if (map[y][x] === 1) {
             cell.classList.add("wall"); // Add wall styling
-        } else if (map[y][x] === 0) {
-            cell.innerHTML += ' <div class="dot"> </div>'
+        } else if (map[y][x] === 0 || map[y][x] === 2) {
+            cell.classList.add('dot');
+            cell.dataset.hasDot = 'true';
         }
         gameBoard.appendChild(cell);
     }
 }
 
+const allClass = [redGhostClass, bleuGhostClass, orangeGhostClass, pinkGhostClass, darkGhostClass, pacmanClass]
 
+// Append PacMan & Ghosts Elements
+allClass.forEach(obj => {
+    const div = document.createElement('div');
+    div.classList.add(obj.name);
+    div.id = obj.name;
+    gameBoard.appendChild(div);
 
-// class Ghost {
-//     constructor(color, direction, position) {
-//         this.color = color
-//         this.direction = direction
-//         this.position = position
-//     }
+    if (obj.name != 'pacMan') {
+        const img = document.createElement('img');
+        img.src = `${obj.name}-solo.png`;
+        div.appendChild(img);
+    }
+    div.style.left = `${obj.position.x * 20}px`;
+    div.style.top = `${obj.position.y * 20}px`;
+})
 
-
-//     setPosition(position) {
-//         this.position = position
-//     }
-// }
-
-// const RedGhost = new Ghost("red", "right", "6 18")
-// console.log("RED GHOST :\n",RedGhost)
-
-// RedGhost.setPosition('8 20')
-// console.log("NEW RED GHOST :\n",RedGhost)
-
-const redGhost = document.createElement('div');
-redGhost.classList.add('redGhost');
-gameBoard.appendChild(redGhost);
-redGhost.innerHTML += ' <img src="red-ghost-solo.png"> </img> '
-
-const bleuGhost = document.createElement('div');
-bleuGhost.classList.add('bleuGhost');
-gameBoard.appendChild(bleuGhost);
-bleuGhost.innerHTML += ' <img src="bleu-ghost-solo.png"> </img> '
-
-const orangeGhost = document.createElement('div');
-orangeGhost.classList.add('orangeGhost');
-gameBoard.appendChild(orangeGhost);
-orangeGhost.innerHTML += ' <img src="orange-ghost-solo.png"> </img> '
-
-const pinkGhost = document.createElement('div');
-pinkGhost.classList.add('pinkGhost');
-gameBoard.appendChild(pinkGhost);
-pinkGhost.innerHTML += ' <img src="pink-ghost-solo.png"> </img> '
-
-const darkBleuGhost = document.createElement('div');
-darkBleuGhost.classList.add('darkBleuGhost');
-gameBoard.appendChild(darkBleuGhost);
-darkBleuGhost.innerHTML += ' <img src="dark-bleu-ghost-solo.png"> </img> '
-
-// Create Pac-Man element
-const pacman = document.createElement('div');
-pacman.classList.add('pacman');
-gameBoard.appendChild(pacman);
 
 let frameIndex = 0;
 const frameWidth = 20; // Width of one Pac-Man frame
 const totalFrames = 6; // Number of frames in the sprite
 
-// Function to update Pac-Man's position
-function updatePacmanPosition() {
-    pacman.style.left = `${pacmanPosition.x * 20}px`;
-    pacman.style.top = `${pacmanPosition.y * 20}px`;
-}
-
-function updateRedGhostPosition() {
-    redGhost.style.left = `${redGhostPosition.x * 20}px`;
-    redGhost.style.top = `${redGhostPosition.y * 20}px`;
-}
-
-function updateBleuGhostPosition() {
-    bleuGhost.style.left = `${bleuGhostPosition.x * 20}px`;
-    bleuGhost.style.top = `${bleuGhostPosition.y * 20}px`;
-}
-
-function updateOrangeGhostPosition() {
-    orangeGhost.style.left = `${orangeGhostPosition.x * 20}px`;
-    orangeGhost.style.top = `${orangeGhostPosition.y * 20}px`;
-}
-
-function updatePinkGhostPosition() {
-    pinkGhost.style.left = `${pinkGhostPosition.x * 20}px`;
-    pinkGhost.style.top = `${pinkGhostPosition.y * 20}px`;
-}
-
-function updateDarkBleuGhostPosition() {
-    darkBleuGhost.style.left = `${darkBleuGhostPosition.x * 20}px`;
-    darkBleuGhost.style.top = `${darkBleuGhostPosition.y * 20}px`;
-}
-
-const random = () => {
-    let n = Math.floor(Math.random()* 4)
-    const ghostDirection = ['up', 'down', 'left', 'right']
-    return ghostDirection[n];
-}
-
-// Function to handle key presses
-document.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowUp') {
-        pacman.style.transform = `rotate(${270}deg)`
-        pacmanDirection = 'up'
-    } else if (event.key === 'ArrowDown') {
-        pacman.style.transform = `rotate(${90}deg)`
-        pacmanDirection = 'down'
-    } else if (event.key === 'ArrowLeft') {
-        pacman.style.transform = `rotate(${180}deg)`
-        pacmanDirection = 'left'
-    } else if (event.key === 'ArrowRight') {
-        pacman.style.transform = `rotate(${0}deg)`
-        pacmanDirection = 'right'
+// Update Positions
+function updatePosition(name, position, direction = '') {
+    const div = document.getElementById(`${name}`);
+    if (name === 'pacMan') {
+        if (direction === 'up') {
+            div.style.transform = `rotate(${270}deg)`
+        } else if (direction === 'down') {
+            div.style.transform = `rotate(${90}deg)`
+        } else if (direction === 'left') {
+            div.style.transform = `rotate(${180}deg)`
+        } else if (direction === 'right') {
+            div.style.transform = `rotate(${0}deg)`
+        }
     }
-});
+    div.style.left = `${position.x * 20}px`;
+    div.style.top = `${position.y * 20}px`;
+}
+
+const generateDirection = () => {
+    // check pac-man Position
+    
+    return 'left'
+}
+const random = () => ['up', 'down', 'left', 'right'][Math.floor(Math.random()* 4)];
+
+
 
 function animatePacMan() {
+    const pacman = document.getElementById(pacmanClass.name);
+
     frameIndex = (frameIndex + 1) % totalFrames; // Loop through frames
     pacman.style.backgroundPosition = `-${frameIndex * frameWidth}px 0px`; 
+    
+    setTimeout(() => requestAnimationFrame(animatePacMan), 200); // Control speed (100ms per frame)
+}
+animatePacMan()
 
-    setTimeout(() => {requestAnimationFrame(animatePacMan);}, 150); // Control speed (100ms per frame)
+function resetData() {
+    gameover = false
+    score = 0
+    document.getElementById('score').innerHTML = score;
+
+    for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+            if (map[y][x] === 0 || map[y][x] === 2) {
+                const cell = gameBoard.children[y * cols + x];
+                cell.classList.add('dot');      // Restore dot visually
+                cell.dataset.hasDot = 'true';    // Mark as having dot
+            }
+        }
+    }
+    
+    pacmanClass.life = 5
+    pacLife.forEach(element => {
+        element.style.opacity = 1
+    })
+    
+    resetPosition()
+}
+
+function resetPosition() {
+
+    pacmanClass.position = { x: 10, y: 5 }
+    pacmanClass.nextPosition = {x: 10, y: 5}
+    pacmanClass.direction = ''
+
+    redGhostClass.position = { x:4, y: 5}
+    redGhostClass.nextPosition = { x:4, y: 5}
+    redGhostClass.direction = 'right'
+
+    bleuGhostClass.position = { x:17, y: 5}
+    bleuGhostClass.nextPosition = {x: 17, y: 5}
+    bleuGhostClass.direction = 'left'
+
+    orangeGhostClass.position = { x:4, y: 15}
+    orangeGhostClass.nextPosition = { x:4, y: 15}
+    orangeGhostClass.direction = 'right'
+
+    pinkGhostClass.position = { x:17, y: 15}
+    pinkGhostClass.nextPosition = { x:17, y: 15}
+    pinkGhostClass.direction = 'left'
+
+    darkGhostClass.position = { x:9, y: 13}
+    darkGhostClass.nextPosition = { x:9, y: 13}
+    darkGhostClass.direction = 'up'
+}
+
+function checkpacmandiretion() {
+
+    if (pacmanClass.nextDirection === 'up') pacmanClass.nextPosition.y--;
+    else if (pacmanClass.nextDirection === 'down') pacmanClass.nextPosition.y++;
+    else if (pacmanClass.nextDirection === 'left') pacmanClass.nextPosition.x--;
+    else if (pacmanClass.nextDirection === 'right') pacmanClass.nextPosition.x++;
+
+    if (map[pacmanClass.position.y] && pacmanClass.nextDirection !== '' && (map[pacmanClass.nextPosition.y][pacmanClass.nextPosition.x] === 2 || map[pacmanClass.nextPosition.y][pacmanClass.nextPosition.x] === 0)) {
+        pacmanClass.direction = pacmanClass.nextDirection
+    }
+
+    pacmanClass.nextPosition.y = pacmanClass.position.y
+    pacmanClass.nextPosition.x = pacmanClass.position.x
 }
 
 // Game loop function
 function gameLoop() {
-    if (pacmanDirection != '') {
+    if (pacmanClass.life > 0 && inGame && score < 2200 && !gameover) {
 
-        let newX = pacmanPosition.x;
-        let newY = pacmanPosition.y;
-
-        let newXRG = redGhostPosition.x;
-        let newYRG = redGhostPosition.y;
-
-        let newXBG = bleuGhostPosition.x;
-        let newYBG = bleuGhostPosition.y;
+        allClass.slice(0, allClass.length-1).forEach(ghost => {
+            if (pacmanClass.position.x === ghost.position.x && pacmanClass.position.y === ghost.position.y) {
+                if (pacmanClass.life > 0) {
+                    pacmanClass.life--
+                    pacLife[pacmanClass.life].style.opacity = 0
+                }
+                inGame = false;
+            }
+        })
         
-        let newXOG = orangeGhostPosition.x;
-        let newYOG = orangeGhostPosition.y;
+        if (!inGame) {
+            if (pacmanClass.life === 0) gameover = true;
+            resetPosition()
+            return
+        }
         
-        let newXPG = pinkGhostPosition.x;
-        let newYPG = pinkGhostPosition.y;
+        checkpacmandiretion()
+
+        // increse position from direction
+        allClass.forEach(obj => {
+            if (obj.direction === 'up') obj.nextPosition.y--;
+            else if (obj.direction === 'down') obj.nextPosition.y++;
+            else if (obj.direction === 'left') obj.nextPosition.x--;
+            else if (obj.direction === 'right') obj.nextPosition.x++;
+        });
+
+        // handle pac-man next position from next direction
         
-        let newXDBG = darkBleuGhostPosition.x;
-        let newYDBG = darkBleuGhostPosition.y;
-
-        if (newX === newXRG && newY === newYRG) return pacmanDirection = '';
-        if (newX === newXBG && newY === newYBG) return pacmanDirection = '';
-        if (newX === newXOG && newY === newYOG) return pacmanDirection = '';
-        if (newX === newXPG && newY === newYPG) return pacmanDirection = '';
-        if (newX === newXDBG && newY === newYDBG) return pacmanDirection = '';
-
-        // pac-man
-        if (pacmanDirection === 'up') newY--;
-        else if (pacmanDirection === 'down') newY++;
-        else if (pacmanDirection === 'left') newX--;
-        else if (pacmanDirection === 'right') newX++;
-        // red
-        if (redGhostDirection === 'up') newYRG--;
-        else if (redGhostDirection === 'down') newYRG++;
-        else if (redGhostDirection === 'left') newXRG--;
-        else if (redGhostDirection === 'right') newXRG++;
-        // bleu
-        if (bleuGhostDirection === 'up') newYBG--;
-        else if (bleuGhostDirection === 'down') newYBG++;
-        else if (bleuGhostDirection === 'left') newXBG--;
-        else if (bleuGhostDirection === 'right') newXBG++;
-        // orange
-        if (orangeGhostDirection === 'up') newYOG--;
-        else if (orangeGhostDirection === 'down') newYOG++;
-        else if (orangeGhostDirection === 'left') newXOG--;
-        else if (orangeGhostDirection === 'right') newXOG++;
-        // pink
-        if (pinkGhostDirection === 'up') newYPG--;
-        else if (pinkGhostDirection === 'down') newYPG++;
-        else if (pinkGhostDirection === 'left') newXPG--;
-        else if (pinkGhostDirection === 'right') newXPG++;
-        // dark-bleu
-        if (darkBleuGhostDirection === 'up') newYDBG--;
-        else if (darkBleuGhostDirection === 'down') newYDBG++;
-        else if (darkBleuGhostDirection === 'left') newXDBG--;
-        else if (darkBleuGhostDirection === 'right') newXDBG++;
+        allClass.slice(0, allClass.length-1).forEach(ghost => {
+            if (map[ghost.nextPosition.y] && (map[ghost.nextPosition.y][ghost.nextPosition.x] === 1 || map[ghost.nextPosition.y][ghost.nextPosition.x] === 2)) {
+                ghost.direction = random();
+            }
+        });
         
-        if (map[newYRG] && map[newYRG][newXRG] === 1) {
-            redGhostDirection = random();
-        }
-        if (map[newYBG] && map[newYBG][newXBG] === 1) {
-            bleuGhostDirection = random();
-        }
-        if (map[newYOG] && map[newYOG][newXOG] === 1) {
-            orangeGhostDirection = random();
-        }
-        if (map[newYPG] && map[newYPG][newXPG] === 1) {
-            pinkGhostDirection = random();
-        }
-        if (map[newYDBG] && map[newYDBG][newXDBG] === 1) {
-            darkBleuGhostDirection = random();
-        }
-
         // Check if the new position is valid (not a wall)
-        if ((map[newY] && map[newY][newX] === 0) || (map[newY] && map[newY][newX] === 2)) {
+        if (map[pacmanClass.nextPosition.y] && map[pacmanClass.nextPosition.y][pacmanClass.nextPosition.x] !== 1) {
             
-            map[newY][newX] = 2
+            if (map[pacmanClass.position.y] && (map[pacmanClass.position.y][pacmanClass.position.x] === 2 || map[pacmanClass.position.y][pacmanClass.position.x] === 0)) {
+                const pacmanCell = gameBoard.children[pacmanClass.position.y * cols + pacmanClass.position.x];
 
-            if (map[newY] && map[newY][newX] === 2) {
-                const pacmanCell = gameBoard.children[pacmanPosition.y * cols + pacmanPosition.x];
-                if (pacmanCell.querySelector('.dot')) {
-                    pacmanCell.removeChild(pacmanCell.querySelector('.dot'));
-                    score += 10
-                    document.getElementById('score').innerText = score;
+                if (pacmanCell.dataset.hasDot === 'true') {
+                    pacmanCell.classList.remove('dot');  // Remove dot visually
+                    pacmanCell.dataset.hasDot = 'false'; // Mark as eaten
+                    score += 10;
+                    document.getElementById('score').innerHTML = score;
                 }
             }
-            pacmanPosition.x = newX;
-            pacmanPosition.y = newY;
-        }
-        
-        // Check if the new position is valid (not a wall)
-        if (map[newYRG] && (map[newYRG][newXRG] === 0 || map[newYRG][newXRG] === 2)) {
-            redGhostPosition.x = newXRG;
-            redGhostPosition.y = newYRG;
-        }
-        // Check if the new position is valid (not a wall)
-        if (map[newYBG] && (map[newYBG][newXBG] === 0 || map[newYBG][newXBG] === 2)) {
-            bleuGhostPosition.x = newXBG;
-            bleuGhostPosition.y = newYBG;
-        }
-        // Check if the new position is valid (not a wall)
-        if (map[newYOG] && (map[newYOG][newXOG] === 0 || map[newYOG][newXOG] === 2)) {
-            orangeGhostPosition.x = newXOG;
-            orangeGhostPosition.y = newYOG;
-        }
-        // Check if the new position is valid (not a wall)
-        if (map[newYPG] && (map[newYPG][newXPG] === 0 || map[newYPG][newXPG] === 2)) {
-            pinkGhostPosition.x = newXPG;
-            pinkGhostPosition.y = newYPG;
-        }
-        // Check if the new position is valid (not a wall)
-        if (map[newYDBG] && (map[newYDBG][newXDBG] === 0 || map[newYDBG][newXDBG] === 2)) {
-            darkBleuGhostPosition.x = newXDBG;
-            darkBleuGhostPosition.y = newYDBG;
+
+            pacmanClass.position.x = pacmanClass.nextPosition.x;
+            pacmanClass.position.y = pacmanClass.nextPosition.y;
+        } else {
+            pacmanClass.nextPosition.x = pacmanClass.position.x;
+            pacmanClass.nextPosition.y = pacmanClass.position.y;
         }
 
-        updatePacmanPosition();
-        updateRedGhostPosition();
-        updateBleuGhostPosition();
-        updateOrangeGhostPosition();
-        updatePinkGhostPosition();
-        updateDarkBleuGhostPosition();
+        // Check if the next position is valid (not a wall)
+        allClass.slice(0, allClass.length-1).forEach(ghost => {
+            if (map[ghost.nextPosition.y] && map[ghost.nextPosition.y][ghost.nextPosition.x] !== 1) {
+                ghost.position.x = ghost.nextPosition.x;
+                ghost.position.y = ghost.nextPosition.y;
+            } else {
+                ghost.nextPosition.x = ghost.position.x;
+                ghost.nextPosition.y = ghost.position.y;
+            }
+        });
+
+        // updateposition();
+        allClass.forEach(obj => {
+            updatePosition(obj.name, obj.position, obj.direction);
+        });
     }
 }
 
+// Function to handle key presses
+document.addEventListener('keydown', (event) => {
+    inGame = true
+    if (event.key === 'ArrowUp') {
+        pacmanClass.nextDirection = 'up'
+    } else if (event.key === 'ArrowDown') {
+        pacmanClass.nextDirection = 'down'
+    } else if (event.key === 'ArrowLeft') {
+        pacmanClass.nextDirection = 'left'
+    } else if (event.key === 'ArrowRight') {
+        pacmanClass.nextDirection = 'right'
+    }
+    if (gameover || score === 2200) {
+        resetData()
+    }
+
+    checkpacmandiretion()
+});
+
 setInterval(gameLoop, 150);
-
-// Start the game loop (Pac-Man moves every 200ms)
-animatePacMan(); // Start animation
-
-// Initialize Pac-Man position
-updatePacmanPosition();
-updateRedGhostPosition();
-updateBleuGhostPosition();
-updateOrangeGhostPosition();
-updatePinkGhostPosition();
-updateDarkBleuGhostPosition();
