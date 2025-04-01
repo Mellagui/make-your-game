@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pac-Man</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="game-container">
+        <div class="subject">
+
+            <div class="subject-header">
+                <div class="title-game">
+                    <img src="assets/pm-header.png" style="width: 24rem; height: 6rem;">
+                </div>
+
+                <div class="handle-score">
+                    <div class="score">score: <span id="score"> 0000</span></div>
+                    <div class="time">time: <span id="timer">  180</span></div>
+                </div>
+            </div>
+
+            <div class="subject-body">
+                <div class="game-board" id="game-board"></div>
+            </div>
+
+            <div class="subject-footer">
+                <!-- lives -->
+                <!-- handle fruit score -->
+                
+                <div class="handle-score">                
+                    <div class="score" style="margin: 0;">
+                        <img src="assets/character/idle.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                        <img src="assets/character/idle.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                        <img src="assets/character/idle.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                        <img src="assets/character/idle.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                        <img src="assets/character/idle.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -5,32 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pac-Man</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 97vh;
+            height: 100vh;
             background-color: #111;
             color: whitesmoke;
-            margin: 0;
         }
         
+        /* Game container for scaling */
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
         .subject {
             display: flex;
             flex-direction: column;
             align-items: center;
             border: 2px solid white;
-            /* padding: 10px; */
-            /* background: rgba(255, 255, 255, 0.1); */
+            
+            width: 420px;
+            height: 580px;
+            position: relative;
         }
 
         .subject-header, .subject-footer {
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* text-align: center; */
-            /* padding: 10px; */
             width: 100%;
         }
         .handle-score {
@@ -55,25 +71,21 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* padding: 10px; */
+            margin: 4px;
         }
 
         .game-board {
             display: grid;
             grid-template-columns: repeat(21, auto);
             grid-template-rows: repeat(21, auto);
-            /* gap: 2px; */
             width: auto;
             height: auto;
             position: relative;
-            /* background-color: #111;             */
         }
 
         .cell {
             width: 20px;
             height: 20px;
-            /* border: 1px solid white; */
-            /* background-color: #111; */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -105,48 +117,44 @@
             background-image: url('pacMan-solo.png'); 
             background-size: 120px 20px; /* Full sprite sheet width */
             background-position: 20px 20px; /* Start from first frame */
-
-            /* background-color: yellow;*/
-            /* border-radius: 50%; */
-            /*width: 20px;
-            height: 20px;
-            position: absolute;
-            transition: top 0.15s linear, left 0.15s linear; */
         }
 
         img {
             width: 20px;
             height: 20px;
         }
-        
-        
+
+
     </style>
 </head>
 <body>
-    <div class="subject">
-        <div class="subject-header">
-            <div class="title-game"><img src="pacManTitle.png" style="width: 24rem; height: 6rem;"></div>
-            <div class="handle-score">
-                <div class="score">score: <span id="score"> 0000</span></div>
-                <div class="time">time: <span id="time">  00:00</span></div>
-            </div>
-        </div>
-        <div class="subject-body">
-            <div class="game-board" id="game-board"></div>
-        </div>
-        <div class="subject-footer">
-            <div class="handle-score">                
-                <div class="score" style="margin: 0;">
-                    <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
-                    <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
-                    <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
-                    <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
-                    <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+    <div class="game-container">
+        <div class="subject">
+            <div class="subject-header">
+                <div class="title-game"><img src="pacManTitle.png" style="width: 24rem; height: 6rem;"></div>
+                <div class="handle-score">
+                    <div class="score">score: <span id="score"> 0000</span></div>
+                    <div class="time">time: <span id="time">  180</span></div>
                 </div>
-                <!-- <div class="time">time:</div> -->
+            </div>
+            <div class="subject-body">
+                <div class="game-board" id="game-board"></div>
+            </div>
+            <div class="subject-footer">
+                <div class="handle-score">                
+                    <div class="score" style="margin: 0;">
+                        <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                        <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                        <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                        <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                        <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                    </div>
+                    <!-- <div class="time">time:</div> -->
+                </div>
             </div>
         </div>
     </div>
+
     <script src="script.js"></script>
     <!-- <script src="pacman.js"></script> -->
 </body>
