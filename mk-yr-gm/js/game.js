@@ -4,23 +4,28 @@ import { Ghosts } from './enemy.js';
 import { InputHandler } from './input.js';
 import { UI } from './ui.js';
 
-// ghosts
-
 export class Game {
     constructor() {
         // game state
-        this.isInitialized = false;
         this.lastTime = 0;
         this.deltaTime = 0;
         this.inGame = false;
         this.victory = false;
         this.gameOver = false;
+        this.maxScore = 0;
 
         // game metrics
         this.score = 0;
         this.lives = 5;
         this.timeRemaining = 240; // 4 minutes
-        // this.timeCounter = 0;
+
+        // // In your game initialization:
+        // game.pacmanSpeed = 120; // 6 cells per second (120/20)
+        // game.ghostSpeed = 80;   // 4 cells per second (80/20)
+        // movement settings (pixels per second)
+        this.pacmanSpeed = 100; // 120px per second = 6 cells per second (20px cells)
+        this.ghostSpeed = 80;    // 80px per second = 4 cells per second
+        this.cellSize = 20;      // Size of each cell in pixels
 
         // game objects
         this.ui = new UI(this);
@@ -32,13 +37,18 @@ export class Game {
 
         // Animation frame reference
         this.animationFrameId = null;
+
+         // End-Event Animations
+        this.overLayer = document.getElementById('overLayer');
+        this.popUp = document.getElementById('popUp');
+        this.menuContent = document.getElementById('menuContent');
     }
 
     init() {
         console.log('Initializing game...');
 
-        // // Make sure UI elements are hidden
-        // this.ui.hideAllMenus();
+        // To change speeds during gameplay:
+        this.setSpeeds(100, 80); // Faster Pacman (8 cells/sec), faster ghosts (5 cells/sec)
 
         // Create game board and level
         this.gameBoard.createBoard();
@@ -47,13 +57,10 @@ export class Game {
         this.player = new Player(this);
         this.ghosts = new Ghosts(this);
 
-        // // Update UI
+        // Update UI
         this.ui.updateScore(this.score);
         this.ui.updateLives(this.lives);
         this.ui.updateTimer(this.timeRemaining);
-        
-        // // Set initialization flag
-        this.isInitialized = true;
         
         // Start the game loop
         this.lastTime = performance.now();
@@ -63,7 +70,6 @@ export class Game {
     }
 
     gameLoop(timestamp) {
-
         // Calculate delta time (in seconds for easier calculations)
         this.deltaTime = (timestamp - this.lastTime) / 1000;
         this.lastTime = timestamp;
@@ -78,47 +84,69 @@ export class Game {
             
             if (this.timeRemaining <= 0 || this.lives === 0) {
                 this.gameOver = true;
-                return
-            } else {
-                // check if pacman position the same ghost position
-                this.ghosts.ppEqualGp(this.player.x, this.player.y)
-                if (!this.inGame) {
-                    if (this.lives === 0) this.gameOver = true;
-                    this.resetPosition()
-                    return
-                }
-
-                this.player.checkpacmandiretion()
-
-                // increse nextPosition from direction
-                this.player.incres()
-                this.ghosts.incres()
-
-                this.ghosts.generate()
-
-                // Check if the new position is valid (not a wall)
-                this.player.pacmanPosition()
-
-                // Check if the next position is valid (not a wall)
-                this.ghosts.nextPositionNotWall()
-                
-                this.player.updatePosition()
-                this.ghosts.updatePosition()
-            
+                this.inGame = false;
+                return;
             }
+            
+            // Handle player movement
+            this.player.update(this.deltaTime);
+            
+            // Handle ghost movement
+            this.ghosts.update(this.deltaTime);
+            
+            // Check for collisions after movement
+            this.ghosts.checkCollisionWithPlayer(this.player.pixelX, this.player.pixelY);
+            
+            // Check for dot collection
+            this.player.checkDotCollection();
 
-            if (this.score >= 2200) {
+            if (this.score >= this.maxScore) {
                 this.victory = true;
+                this.inGame = false;
             }
         }
-        // victory and game over
+    
+        if (this.victory) {
+            this.menu('you win <br> press to start new game')
+            return
+        } else if (this.gameOver) {
+            console.log('rrrr')
+            this.menu('you lose <br> press to start new game')
+            return
+        } else if (!this.inGame) {
+            this.menu('press to start')
+        }
         
         // Continue the game loop
         this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
     }
+   
+
+    // End-Event Animations Handler
+    menu(content) {
+        menuContent.innerHTML = content;
+        overLayer.style.display = 'block';
+        popUp.style.display = 'block';
+    }
 
     resetPosition() {
-        this.player.reset()
-        this.ghosts.reset()
+        this.player.reset();
+        this.ghosts.reset();
+    }
+
+    // Convert pixel position to grid coordinates
+    pixelsToGrid(pixels) {
+        return Math.round(pixels / this.cellSize);
+    }
+
+    // Convert grid position to pixel coordinates
+    gridToPixels(grid) {
+        return grid * this.cellSize;
+    }
+
+    // Method to change speeds if needed (in pixels per second)
+    setSpeeds(pacmanSpeed, ghostSpeed) {
+        this.pacmanSpeed = pacmanSpeed;
+        this.ghostSpeed = ghostSpeed;
     }
 }

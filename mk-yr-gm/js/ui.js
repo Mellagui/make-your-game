@@ -11,7 +11,6 @@ export class UI {
     }
     
     updateLives(lives) {
-        // this.livesElement.textContent = lives;
         if (lives === 5) return
         this.livesElement[lives].style.opacity = 0
     }

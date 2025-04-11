@@ -52,135 +52,26 @@ const map = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], // 21 * 21
 const gameBoard = document.getElementById("game-board");
 const rows = 21;
 const cols = 21;
-
 const pacLife = document.querySelectorAll('.pacLife')
-
 
 let randomDirectionPM = true
 let score = 0;
 let time = 0;
-let inGame = false;
-let gameover = false;
 let life = 5;
 let pacmanNextDirection = '';
 
-// CLASS PLAYER //
+let inGame = false;
+let gameover = false;
+let victory = false;
+let pause = false;
 
 // Pac-Man | Ghosts
-const pacman = {
-    name: 'pacMan',
-    position: { x: 10, y: 5 },
-    nextPosition: {x: 10, y: 5},
-    direction: '',
-}
-const redGhost = {
-    name: 'redGhost',
-    position: { x:4, y: 5},
-    nextPosition: { x:4, y: 5},
-    direction: 'right',
-}
-const bleuGhost = {
-    name: 'bleuGhost',
-    position: { x:17, y: 5},
-    nextPosition: {x: 17, y: 5},
-    direction: 'left',
-}
-const orangeGhost = {
-    name: 'orangeGhost',
-    position: { x:4, y: 15},
-    nextPosition: { x:4, y: 15},
-    direction: 'right',
-}
-const pinkGhost = {
-    name: 'pinkGhost',
-    position: { x:17, y: 15},
-    nextPosition: { x:17, y: 15},
-    direction: 'left',
-}
-const darkGhost = {
-    name: 'darkGhost',
-    position: { x:9, y: 13},
-    nextPosition: { x:9, y: 13},
-    direction: 'up',
-}
-
-// // Calculate cell size dynamically
-// function calculateCellSize() {
-//     const boardRect = gameBoard.getBoundingClientRect();
-//     const cellWidth = boardRect.width / cols;
-//     const cellHeight = boardRect.height / rows;
-//     return { width: cellWidth, height: cellHeight };
-// }
-
-// // Generate grid cells
-// function generateGrid() {
-//     gameBoard.innerHTML = ""; // Clear any previous grid if it exists
-
-//     for (let y = 0; y < rows; y++) {
-//         for (let x = 0; x < cols; x++) {
-//             const cell = document.createElement("div");
-//             cell.classList.add("cell");
-
-//             // Add walls and dots as per map
-//             if (map[y][x] === 1) {
-//                 cell.classList.add("wall");
-//             } else if (map[y][x] === 0 || map[y][x] === 2) {
-//                 cell.classList.add("dot");
-//                 cell.dataset.hasDot = 'true';
-//             }
-
-//             gameBoard.appendChild(cell);
-//         }
-//     }
-// }
-
-// // Update Pac-Man and Ghost Position Responsively
-// function updatePosition(name, position, direction = '') {
-//     const div = document.getElementById(`${name}`);
-//     const { width, height } = calculateCellSize();
-
-//     // Rotate Pac-Man based on direction
-//     if (name === 'pacMan') {
-//         if (direction === 'up') div.style.transform = `rotate(${270}deg)`;
-//         else if (direction === 'down') div.style.transform = `rotate(${90}deg)`;
-//         else if (direction === 'left') div.style.transform = `rotate(${180}deg)`;
-//         else if (direction === 'right') div.style.transform = `rotate(${0}deg)`;
-//     }
-
-//     div.style.left = `${position.x * width}px`;
-//     div.style.top = `${position.y * height}px`;
-//     div.style.width = `${width}px`;
-//     div.style.height = `${height}px`;
-// }
-
-// // Initialize Game Characters (Pac-Man & Ghosts)
-// function initializeCharacters() {
-//     const allClass = [redGhost, bleuGhost, orangeGhost, pinkGhost, darkGhost, pacman];
-
-//     allClass.forEach(obj => {
-//         const div = document.createElement('div');
-//         div.classList.add(obj.name);
-//         div.id = obj.name;
-//         gameBoard.appendChild(div);
-
-//         if (obj.name !== 'pacMan') {
-//             const img = document.createElement('img');
-//             img.src = `${obj.name}-solo.png`;
-//             div.appendChild(img);
-//         }
-
-//         const { width, height } = calculateCellSize();
-//         div.style.left = `${obj.position.x * width}px`;
-//         div.style.top = `${obj.position.y * height}px`;
-//         div.style.width = `${width}px`;
-//         div.style.height = `${height}px`;
-//     });
-// }
-
-// // Call Functions to Generate the Responsive Grid and Characters
-// generateGrid();
-// initializeCharacters();
-
+const pacman = {name:'pacMan',position:{ x: 10, y: 5 },nextPosition:{x: 10, y: 5},direction:'',}
+const redGhost = {name:'redGhost',position:{ x:4, y: 5},nextPosition:{ x:4, y: 5},direction:'right',}
+const bleuGhost = {name:'bleuGhost',position:{ x:17, y: 5},nextPosition:{x: 17, y: 5},direction:'left',}
+const orangeGhost = {name:'orangeGhost',position:{ x:4, y: 15},nextPosition:{ x:4, y: 15},direction:'right',}
+const pinkGhost = {name:'pinkGhost',position:{ x:17, y: 15},nextPosition:{ x:17, y: 15},direction:'left',}
+const darkGhost = {name:'darkGhost',position:{ x:9, y: 13},nextPosition:{ x:9, y: 13},direction:'up',}
 
 // Generate grid cells
 for (let y = 0; y < rows; y++) {
@@ -279,6 +170,7 @@ function resetPosition() {
     pacman.position = { x: 10, y: 5 }
     pacman.nextPosition = {x: 10, y: 5}
     pacman.direction = ''
+    pacmanNextDirection = ''
 
     redGhost.position = { x:4, y: 5}
     redGhost.nextPosition = { x:4, y: 5}
@@ -318,7 +210,8 @@ function checkpacmandiretion() {
 
 // Game loop function
 function gameLoop() {
-    if (life > 0 && inGame && score < 2200 && !gameover) {
+
+    if (!pause && inGame && !victory && !gameover) {
 
         allClass.slice(0, allClass.length-1).forEach(ghost => {
 
@@ -328,14 +221,11 @@ function gameLoop() {
                     pacLife[life].style.opacity = 0
                 }
                 inGame = false;
+                return
             }
         })
         
-        if (!inGame) {
-            if (life === 0) gameover = true;
-            resetPosition()
-            return
-        }
+        if (!inGame) return
         
         // handle pac-man next position from next direction
         checkpacmandiretion()
@@ -389,26 +279,64 @@ function gameLoop() {
         allClass.forEach(obj => {
             updatePosition(obj.name, obj.position, obj.direction);
         });
-        
     }
+    if (/*time === 0 ||*/ life === 0) {
+        gameover = true
+        inGame = false
+    } else if (score === 2200) victory = true
+
+    if (victory) {
+        menu('you win <br> press to start new game')
+        return
+    } else if (gameover) {
+        menu('you lose <br> press to start new game')
+        return
+    } else if (!inGame) {
+        menu('press to start')
+        return
+    } else if (pause) {
+        menu('pause <br> press to continue')
+        return
+    }
+}
+
+// End-Event Animations
+const overLayer = document.getElementById('overLayer');
+const popUp = document.getElementById('popUp');
+const menuContent = document.getElementById('menuContent');
+
+// End-Event Animations Handler
+function menu(content) {
+    menuContent.innerHTML = content;
+    overLayer.style.display = 'block';
+    popUp.style.display = 'block';
 }
 
 // Function to handle key presses
 document.addEventListener('keydown', (event) => {
-    if (gameover || score === 2200) {
-        resetData();
-        return;
-    }
-    inGame = true
-    
     const directions = {
         'ArrowUp': 'up',
         'ArrowDown': 'down',
         'ArrowLeft': 'left',
         'ArrowRight': 'right'
     };
+    if (event.code === 'KeyP' && inGame) {
+        pause = pause? false: true;
+        return 
+    }
+    if (victory || gameover) {
+        resetData()
+        victory = false
+        gameover = false
+    }
+    if (!inGame) {
+        resetPosition()
+        inGame = true
+    }
+    overLayer.style.display = 'none';
+    popUp.style.display = 'none';
     
-    if (directions[event.key]) {
+    if (inGame && !pause && directions[event.key]) {
         pacmanNextDirection = directions[event.key];
     }
 

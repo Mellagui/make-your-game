@@ -124,11 +124,45 @@
             height: 20px;
         }
 
+/* Overlay (dimmed background) */
+#overLayer {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+    z-index: 999; /* Ensure it's above other elements */
+}
 
+/* Popup box */
+#popUp {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 255, 255, 0.5); /* Semi-transparent background */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Higher than overlay */
+    width: 12rem;
+    height: 8rem;
+    justify-items : center;
+    align-content : center;
+    color: rgba(255, 208, 0, 0.934);
+}
     </style>
 </head>
 <body>
     <div class="game-container">
+        <div id="overLayer"></div>
+        <div id="popUp">
+            <h2 id="menuContent"></h2>
+            <!-- <button id="closePopUp" class="reset-btn">ok</button> -->
+        </div>
         <div class="subject">
             <div class="subject-header">
                 <div class="title-game"><img src="pacManTitle.png" style="width: 24rem; height: 6rem;"></div>
@@ -159,114 +193,3 @@
     <!-- <script src="pacman.js"></script> -->
 </body>
 </html>
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pac-man</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            justify-items: center;
-            align-content: center;
-            background-color: #111;
-            color: whitesmoke;
-            height: 97vh;
-        }
-        
-        .subject {
-            justify-items: center;
-            align-content: center;
-            border: white 2px solid;
-            width: 80%;
-            height: 90%;
-        }
-        .subject-header {
-            justify-items: center;
-            align-content: center;
-            border: white 2px solid;
-            width: 100%;
-        }
-        .subject-body {
-            justify-items: center;
-            justify-content: center;
-            align-content: center;
-            border: white 2px solid;
-            width: auto;
-            height: 80%;
-        }
-        .game-board {
-            display: grid;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            /* gap: 2px; */
-            grid-template-columns: repeat(20, auto);
-            grid-template-rows: repeat(20, auto);
-            /* gap: 10px; */
-            /* margin: 20px auto; */
-            width: 30rem;
-            height: 30rem;
-            background-color: rgba(7, 2, 20, 0.432);            
-        }
-        .subject-fouter {
-            justify-items: center;
-            align-content: center;
-            border: white 2px solid;
-            width: 100%;
-        }
-        .pacman {
-            background-color: yellow;
-            border-radius: 50%;
-            width: 16px;
-            height: 16px;
-            position: absolute;
-            left: 20px;
-            top: 20px;
-            /* z-index: 0; */
-            transition: top 1s ease-in-out, left 1s ease-in-out; /* Smooth transition */
-        }
-        .cell {
-            border: white solid 0.1rem;
-            width: 20px;
-            height: 20px;
-            background-color: rgba(240, 248, 255, 0.226);
-        }
-        .wall {
-            background-color: blue;
-        }
-        
-    </style>
-</head>
-<body>
-    <div class="subject" id="subject">
-        <div class="subject-header">
-            <p>head</p>
-        </div>
-        <div class="subject-body">
-            <div class="game-board" id="game-board">
-            </div>
-        </div>
-        <div class="subject-fouter">
-            <p>fouter</p>
-        </div>
-    </div>
-    <script src="script.js"></script>
-</body>
-</html> -->
-
-
-    <!-- .dot {
-        width: 10px;
-        height: 10px;
-        background-color: white;
-        border-radius: 50%;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-    } -->

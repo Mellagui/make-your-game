@@ -26,10 +26,20 @@ export class GameBoard {
                     [1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1],
                     [1,2,0,0,0,2,0,0,0,2,1,2,0,0,0,2,0,0,0,2,1],
                     [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]];
+
+        // this.map = [[1,1,1,1,1,1,1,1,1,1,1], // 21 * 21
+        //             [1,2,0,0,0,2,0,0,0,2,1],
+        //             [1,0,1,1,1,0,1,1,1,0,1],
+        //             [1,0,1,2,0,2,0,2,1,0,1],
+        //             [1,0,1,0,1,1,1,0,1,0,1],
+        //             [1,2,0,2,1,1,1,2,0,2,1],
+        //             [1,0,1,2,0,2,0,2,1,0,1],
+        //             [1,0,1,1,1,0,1,1,1,0,1],
+        //             [1,2,0,0,0,2,0,0,0,2,1],
+        //             [1,1,1,1,1,1,1,1,1,1,1]];
     }
     
     createBoard() {
-        // Clear existing board
         this.board.innerHTML = '';
         
         // Set board dimensions
@@ -50,13 +60,14 @@ export class GameBoard {
                 this.board.appendChild(cell);
             }
         }
+
+        this.game.maxScore = document.querySelectorAll('.dot').length * 10
     }
     
     createCell(x, y) {
         const cell = document.createElement('div');
         cell.className = 'cell';
         cell.id = `${x}-${y}`;
-        
         return cell;
     }
     

@@ -11,16 +11,28 @@ export class Player {
                 path: 'assets/character/pacman-frames.png',
                 frameCount: 6,
             },
-        }
-        // this.path = 'assets/character/pacman-frames.png',
+        };
         this.pacmanElement = null;
 
+        // Movement properties
         this.nextDirection = '';
-        this.name = 'pacMan';
-        this.x = 10;
-        this.y = 5;
         this.direction = '';
-        this.nextPosition = {x: 10, y: 5};
+        this.name = 'pacMan';
+        
+        // Position in grid cells (for game logic)
+        this.gridX = 10;
+        this.gridY = 5;
+        
+        // Position in pixels (for rendering)
+        this.pixelX = this.game.gridToPixels(this.gridX);
+        this.pixelY = this.game.gridToPixels(this.gridY);
+        
+        // Target position in pixels (where we're moving to)
+        this.targetX = this.pixelX;
+        this.targetY = this.pixelY;
+        
+        // Is player currently moving between cells
+        this.isMoving = false;
 
         this.createPlayerElement();
     }
@@ -41,85 +53,120 @@ export class Player {
         this.game.gameBoard.board.appendChild(this.pacmanElement);
 
         // Init player animator
-        this.animator = new ElementAnimator(this.pacmanElement, this.animations)
-        this.animator.setAnimation('pm-frames')
+        this.animator = new ElementAnimator(this.pacmanElement, this.animations);
+        this.animator.setAnimation('pm-frames');
         
         // Initial render
         this.render();
-        
-        console.log('Player element created at position:', this.x, this.y);
     }
     
     render() {
         if (this.pacmanElement) {
-            this.pacmanElement.style.left = `${this.x * this.height}px`;
-            this.pacmanElement.style.top = `${this.y * this.width}px`;
+            this.pacmanElement.style.left = `${this.pixelX}px`;
+            this.pacmanElement.style.top = `${this.pixelY}px`;
+            
+            // Rotate based on direction
+            const arrowMap = {'up': 270, 'down': 90, 'left': 180, 'right': 0};
+            const arrow = arrowMap[this.direction] ?? 0;
+            this.pacmanElement.style.transform = `rotate(${arrow}deg)`;
         }
     }
 
     reset() {
-        this.x = 10;
-        this.y = 5;
-        this.nextPosition = {x: 10, y: 5}
-        this.direction = ''
+        this.gridX = 10;
+        this.gridY = 5;
+        this.pixelX = this.game.gridToPixels(this.gridX);
+        this.pixelY = this.game.gridToPixels(this.gridY);
+        this.targetX = this.pixelX;
+        this.targetY = this.pixelY;
+        this.direction = '';
+        this.isMoving = false;
     }
 
-    checkpacmandiretion() {
-
-        if (this.nextDirection === 'up') this.nextPosition.y--;
-        else if (this.nextDirection === 'down') this.nextPosition.y++;
-        else if (this.nextDirection === 'left') this.nextPosition.x--;
-        else if (this.nextDirection === 'right') this.nextPosition.x++;
-    
-        if (this.nextDirection !== '' && this.game.gameBoard.map[this.y] && (this.game.gameBoard.map[this.nextPosition.y][this.nextPosition.x] === 2 || this.game.gameBoard.map[this.nextPosition.y][this.nextPosition.x] === 0)) {
-            this.direction = this.nextDirection
-        }
-    
-        this.nextPosition.y = this.y
-        this.nextPosition.x = this.x
-    }
-
-    incres() {
-        if (this.direction === 'up') this.nextPosition.y--;
-        else if (this.direction === 'down') this.nextPosition.y++;
-        else if (this.direction === 'left') this.nextPosition.x--;
-        else if (this.direction === 'right') this.nextPosition.x++;
-    }
-
-    pacmanPosition() {
-        if (this.game.gameBoard.map[this.nextPosition.y] && this.game.gameBoard.map[this.nextPosition.y][this.nextPosition.x] !== 1) {
-                    
-            if (this.game.gameBoard.map[this.y] && (this.game.gameBoard.map[this.y][this.x] === 2 || this.game.gameBoard.map[this.y][this.x] === 0)) {
-                const pacmanCell = document.getElementById(`${this.x}-${this.y}`);
-
-                if (pacmanCell.dataset.hasDot === 'true') {
-                    pacmanCell.classList.remove('dot');  // Remove dot visually
-                    pacmanCell.dataset.hasDot = 'false'; // Mark as eaten
-                    this.game.score += 10;
-                    this.game.ui.updateScore(this.game.score)
-                }
-            }
-
-            this.x = this.nextPosition.x;
-            this.y = this.nextPosition.y;
-        } else {
-            this.nextPosition.x = this.x;
-            this.nextPosition.y = this.y;
-        }
-    }
-
-    updatePosition() {
-        if (this.direction === 'up') {
-            this.pacmanElement.style.transform = `rotate(${270}deg)`
-        } else if (this.direction === 'down') {
-            this.pacmanElement.style.transform = `rotate(${90}deg)`
-        } else if (this.direction === 'left') {
-            this.pacmanElement.style.transform = `rotate(${180}deg)`
-        } else if (this.direction === 'right') {
-            this.pacmanElement.style.transform = `rotate(${0}deg)`
+    update(deltaTime) {
+        // If we've reached our target position, update grid position
+        if (!this.isMoving) {
+            this.gridX = this.game.pixelsToGrid(this.pixelX);
+            this.gridY = this.game.pixelsToGrid(this.pixelY);
+            
+            // Check if we can change direction
+            this.tryChangeDirection();
         }
         
-        this.pacmanElement.style.left = `${this.x * 20}px`;
-        this.pacmanElement.style.top = `${this.y * 20}px`;
+        // Move towards target if we're not there yet
+        if (this.isMoving) {
+            this.moveTowardsTarget(deltaTime);
+        }
+        
+        this.render();
+    }
+
+    tryChangeDirection() {
+        // Only change direction if we're not currently moving
+        if (this.isMoving) return;
+        
+        // Calculate potential new target based on nextDirection
+        let newTargetX = this.pixelX;
+        let newTargetY = this.pixelY;
+        
+        if (this.nextDirection === 'up') newTargetY -= 20;
+        else if (this.nextDirection === 'down') newTargetY += 20;
+        else if (this.nextDirection === 'left') newTargetX -= 20;
+        else if (this.nextDirection === 'right') newTargetX += 20;
+        
+        // Convert target to grid coordinates for collision check
+        const targetGridX = this.game.pixelsToGrid(newTargetX);
+        const targetGridY = this.game.pixelsToGrid(newTargetY);
+        
+        // Check if the new direction is valid (not a wall)
+        if (this.nextDirection !== '' && this.game.gameBoard.map[targetGridY] && this.game.gameBoard.map[targetGridY][targetGridX] !== 1) {
+            
+            this.direction = this.nextDirection;
+            this.targetX = newTargetX;
+            this.targetY = newTargetY;
+            this.isMoving = true;
+        }
+    }
+
+    moveTowardsTarget(deltaTime) {
+        const moveDistance = this.game.pacmanSpeed * deltaTime;
+        
+        // Calculate direction vector
+        const dx = this.targetX - this.pixelX;
+        const dy = this.targetY - this.pixelY;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        
+        // If we're very close to target, snap to it
+        if (distance < moveDistance) {
+            this.pixelX = this.targetX;
+            this.pixelY = this.targetY;
+            this.isMoving = false;
+            this.checkDotCollection();
+        } else {
+            // Move towards target
+            this.pixelX += (dx / distance) * moveDistance;
+            this.pixelY += (dy / distance) * moveDistance;
+        }
+    }
+
+    checkDotCollection() {
+        const gridX = this.game.pixelsToGrid(this.pixelX);
+        const gridY = this.game.pixelsToGrid(this.pixelY);
+        // const gridX = Math.ceil(this.pixelX / this.game.cellSize)
+        // const gridY = Math.ceil(this.pixelY / this.game.cellSize)
+        
+        
+        if (this.game.gameBoard.map[gridY] && (this.game.gameBoard.map[gridY][gridX] === 2 || this.game.gameBoard.map[gridY][gridX] === 0)) {
+            console.log(this.game.gameBoard.map[gridY][gridX])
+            // console.log()
+            const pacmanCell = document.getElementById(`${gridX}-${gridY}`);
+            
+            if (pacmanCell && pacmanCell.dataset.hasDot === 'true') {
+                pacmanCell.classList.remove('dot');
+                pacmanCell.dataset.hasDot = 'false';
+                this.game.score += 10;
+                this.game.ui.updateScore(this.game.score);
+            }
+        }
     }
 }
