@@ -60,7 +60,6 @@ export class GameBoard {
                 this.board.appendChild(cell);
             }
         }
-
         this.game.maxScore = document.querySelectorAll('.dot').length * 10
     }
     
@@ -71,20 +70,9 @@ export class GameBoard {
         return cell;
     }
     
-    isValidPosition(x, y) {
-        return x >= 0 && y >= 0 && x < this.cols && y < this.rows;
-    }
-    
     isWall(x, y) {
-        if (!this.isValidPosition(x, y)) return true;
+        // check if wall surface.?
+        if (!(x >= 0 && y >= 0 && x < this.cols && y < this.rows)) return true;
         return this.grid[y][x] === 'wall';
-    }
-    
-    gridToPixel(gridPos) {
-        return gridPos * this.cellSize;
-    }
-    
-    pixelToGrid(pixelPos) {
-        return Math.floor(pixelPos / this.cellSize);
     }
 }

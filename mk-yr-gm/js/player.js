@@ -20,16 +20,16 @@ export class Player {
         this.name = 'pacMan';
         
         // Position in grid cells (for game logic)
-        this.gridX = 10;
-        this.gridY = 5;
+        this.x = 10;
+        this.y = 5;
         
         // Position in pixels (for rendering)
-        this.pixelX = this.game.gridToPixels(this.gridX);
-        this.pixelY = this.game.gridToPixels(this.gridY);
+        this.pixelX = this.game.gridToPixels(this.x);
+        this.pixelY = this.game.gridToPixels(this.y);
         
         // Target position in pixels (where we're moving to)
-        this.targetX = this.pixelX;
-        this.targetY = this.pixelY;
+        this.nextPositionPixelX = this.pixelX;
+        this.nextPositionPixelY = this.pixelY;
         
         // Is player currently moving between cells
         this.isMoving = false;
@@ -73,12 +73,12 @@ export class Player {
     }
 
     reset() {
-        this.gridX = 10;
-        this.gridY = 5;
-        this.pixelX = this.game.gridToPixels(this.gridX);
-        this.pixelY = this.game.gridToPixels(this.gridY);
-        this.targetX = this.pixelX;
-        this.targetY = this.pixelY;
+        this.x = 10;
+        this.y = 5;
+        this.pixelX = this.game.gridToPixels(this.x);
+        this.pixelY = this.game.gridToPixels(this.y);
+        this.nextPositionPixelX = this.pixelX;
+        this.nextPositionPixelY = this.pixelY;
         this.direction = '';
         this.isMoving = false;
     }
@@ -86,11 +86,12 @@ export class Player {
     update(deltaTime) {
         // If we've reached our target position, update grid position
         if (!this.isMoving) {
-            this.gridX = this.game.pixelsToGrid(this.pixelX);
-            this.gridY = this.game.pixelsToGrid(this.pixelY);
+            this.x = this.game.pixelsToGrid(this.pixelX);
+            this.y = this.game.pixelsToGrid(this.pixelY);
             
             // Check if we can change direction
-            this.tryChangeDirection();
+            if (this.game.gameBoard.map[this.y] && this.game.gameBoard.map[this.y][this.x] === 2 || (this.y === 5 && this.x === 10)) this.tryChangeDirection();
+            this.incresPlayerPosition()
         }
         
         // Move towards target if we're not there yet
@@ -101,47 +102,66 @@ export class Player {
         this.render();
     }
 
-    tryChangeDirection() {
+    incresPlayerPosition() {
         // Only change direction if we're not currently moving
         if (this.isMoving) return;
-        
+
         // Calculate potential new target based on nextDirection
-        let newTargetX = this.pixelX;
-        let newTargetY = this.pixelY;
+        let newPixelX = this.pixelX;
+        let newPixelY = this.pixelY;
         
-        if (this.nextDirection === 'up') newTargetY -= 20;
-        else if (this.nextDirection === 'down') newTargetY += 20;
-        else if (this.nextDirection === 'left') newTargetX -= 20;
-        else if (this.nextDirection === 'right') newTargetX += 20;
+        if (this.direction === 'up') newPixelY -= 20;
+        else if (this.direction === 'down') newPixelY += 20;
+        else if (this.direction === 'left') newPixelX -= 20;
+        else if (this.direction === 'right') newPixelX += 20;
         
         // Convert target to grid coordinates for collision check
-        const targetGridX = this.game.pixelsToGrid(newTargetX);
-        const targetGridY = this.game.pixelsToGrid(newTargetY);
+        const targetGridX = this.game.pixelsToGrid(newPixelX);
+        const targetGridY = this.game.pixelsToGrid(newPixelY);
         
-        // Check if the new direction is valid (not a wall)
-        if (this.nextDirection !== '' && this.game.gameBoard.map[targetGridY] && this.game.gameBoard.map[targetGridY][targetGridX] !== 1) {
+        if (this.direction !== '' && this.game.gameBoard.map[targetGridY] && this.game.gameBoard.map[targetGridY][targetGridX] !== 1) {
             
-            this.direction = this.nextDirection;
-            this.targetX = newTargetX;
-            this.targetY = newTargetY;
+            this.nextPositionPixelX = newPixelX;
+            this.nextPositionPixelY = newPixelY;
             this.isMoving = true;
         }
+
+    }
+    
+    tryChangeDirection() {
+        if (this.nextDirection === '') return
+
+        let x = this.x
+        let y = this.y
+        
+        if (this.nextDirection === 'up') y--;
+        else if (this.nextDirection === 'down') y++;
+        else if (this.nextDirection === 'left') x--;
+        else if (this.nextDirection === 'right') x++;
+        
+        // Check if the new direction is valid (not a wall)
+        if (this.game.gameBoard.map[y] && (this.game.gameBoard.map[y][x] === 2 || this.game.gameBoard.map[y][x] === 0)) {
+            this.direction = this.nextDirection
+            return
+        }
+
+        this.nextDirection = this.direction
     }
 
     moveTowardsTarget(deltaTime) {
         const moveDistance = this.game.pacmanSpeed * deltaTime;
         
         // Calculate direction vector
-        const dx = this.targetX - this.pixelX;
-        const dy = this.targetY - this.pixelY;
+        const dx = this.nextPositionPixelX - this.pixelX;
+        const dy = this.nextPositionPixelY - this.pixelY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         
         // If we're very close to target, snap to it
         if (distance < moveDistance) {
-            this.pixelX = this.targetX;
-            this.pixelY = this.targetY;
+            this.pixelX = this.nextPositionPixelX;
+            this.pixelY = this.nextPositionPixelY;
             this.isMoving = false;
-            this.checkDotCollection();
+            // this.checkDotCollection()
         } else {
             // Move towards target
             this.pixelX += (dx / distance) * moveDistance;
@@ -150,16 +170,8 @@ export class Player {
     }
 
     checkDotCollection() {
-        const gridX = this.game.pixelsToGrid(this.pixelX);
-        const gridY = this.game.pixelsToGrid(this.pixelY);
-        // const gridX = Math.ceil(this.pixelX / this.game.cellSize)
-        // const gridY = Math.ceil(this.pixelY / this.game.cellSize)
-        
-        
-        if (this.game.gameBoard.map[gridY] && (this.game.gameBoard.map[gridY][gridX] === 2 || this.game.gameBoard.map[gridY][gridX] === 0)) {
-            console.log(this.game.gameBoard.map[gridY][gridX])
-            // console.log()
-            const pacmanCell = document.getElementById(`${gridX}-${gridY}`);
+        if (this.game.gameBoard.map[this.y] && this.game.gameBoard.map[this.y][this.x] !== 1) {
+            const pacmanCell = document.getElementById(`${this.x}-${this.y}`);
             
             if (pacmanCell && pacmanCell.dataset.hasDot === 'true') {
                 pacmanCell.classList.remove('dot');
