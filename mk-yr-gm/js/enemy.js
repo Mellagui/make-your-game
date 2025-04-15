@@ -3,7 +3,7 @@ export class Ghosts {
         this.game = game;
         this.width = 20;
         this.height = 20;
-        this.ghostARR = ['red', 'bleu', 'orange', 'pink', 'dark'];
+        this.ghostARR = ['red', 'bleu', 'orange', 'pink'];
         this.directions = ['up', 'down', 'left', 'right'];
         this.ghosts = {
             red: {
@@ -11,67 +11,54 @@ export class Ghosts {
                 name: 'redGhost',
                 path: 'assets/enemy/r-ghost.png',
                 // Grid positions
-                x: 4,
-                y: 5,
+                gridX: 4,
+                gridY: 5,
                 // Pixel positions
                 pixelX: game.gridToPixels(4),
                 pixelY: game.gridToPixels(5),
                 // Movement
                 direction: 'right',
-                targetX: game.gridToPixels(5),
-                targetY: game.gridToPixels(5),
+                nextPixelX: game.gridToPixels(5),
+                nextPixelY: game.gridToPixels(5),
                 isMoving: false,
             },
             bleu: {
                 ghostElement: null,
                 name: 'bleuGhost',
                 path: 'assets/enemy/b-ghost.png',
-                x: 17,
-                y: 5,
+                gridX: 17,
+                gridY: 5,
                 pixelX: game.gridToPixels(17),
                 pixelY: game.gridToPixels(5),
                 direction: 'left',
-                targetX: game.gridToPixels(16),
-                targetY: game.gridToPixels(5),
+                nextPixelX: game.gridToPixels(16),
+                nextPixelY: game.gridToPixels(5),
                 isMoving: false,
             },
             orange: {
                 ghostElement: null,
                 name: 'orangeGhost',
                 path: 'assets/enemy/o-ghost.png',
-                x: 4,
-                y: 15,
+                gridX: 4,
+                gridY: 15,
                 pixelX: game.gridToPixels(4),
                 pixelY: game.gridToPixels(15),
                 direction: 'right',
-                targetX: game.gridToPixels(5),
-                targetY: game.gridToPixels(15),
+                nextPixelX: game.gridToPixels(5),
+                nextPixelY: game.gridToPixels(15),
                 isMoving: false,
             },
             pink: {
                 ghostElement: null,
                 name: 'pinkGhost',
                 path: 'assets/enemy/p-ghost.png',
-                x: 17,
-                y: 15,
+                gridX: 17,
+                gridY: 15,
                 pixelX: game.gridToPixels(17),
                 pixelY: game.gridToPixels(15),
                 direction: 'left',
-                targetX: game.gridToPixels(16),
-                targetY: game.gridToPixels(15),
-                isMoving: false,
-            },
-            dark: {
-                ghostElement: null,
-                name: 'darkGhost',
-                path: 'assets/enemy/d-ghost.png',
-                x: 9,
-                y: 13,
-                pixelX: game.gridToPixels(9),
-                pixelY: game.gridToPixels(13),
-                direction: 'up',
-                targetX: game.gridToPixels(9),
-                targetY: game.gridToPixels(12),
+                nextPixelX: game.gridToPixels(16),
+                nextPixelY: game.gridToPixels(15),
                 isMoving: false,
             }
         };
@@ -96,6 +83,7 @@ export class Ghosts {
             
             const img = document.createElement('img');
             img.src = ghost.path;
+            img.style.padding = '1px'
             ghost.ghostElement.appendChild(img);
 
             // Add the ghost element to the game board
@@ -119,8 +107,8 @@ export class Ghosts {
             
             // Update grid position if not moving
             if (!ghost.isMoving) {
-                ghost.x = this.game.pixelsToGrid(ghost.pixelX);
-                ghost.y = this.game.pixelsToGrid(ghost.pixelY);
+                ghost.gridX = this.game.pixelsToGrid(ghost.pixelX);
+                ghost.gridY = this.game.pixelsToGrid(ghost.pixelY);
                 
                 // Decide next move
                 this.decideGhostMove(ghost);
@@ -137,46 +125,32 @@ export class Ghosts {
 
     decideGhostMove(ghost) {
         // Check if current direction is still valid
-        let nextx = ghost.x;
-        let nexty = ghost.y;
+        let nextGridX = ghost.gridX;
+        let nextGridY = ghost.gridY;
 
-        if (this.game.gameBoard.map[nexty] && this.game.gameBoard.map[nexty][nextx] === 0) {
-            if (ghost.direction === 'up') nexty--;
-            else if (ghost.direction === 'down') nexty++;
-            else if (ghost.direction === 'left') nextx--;
-            else if (ghost.direction === 'right') nextx++;
+        if (ghost.direction === 'up') nextGridY--;
+        else if (ghost.direction === 'down') nextGridY++;
+        else if (ghost.direction === 'left') nextGridX--;
+        else if (ghost.direction === 'right') nextGridX++;
 
-            ghost.targetX = this.game.gridToPixels(nextx);
-            ghost.targetY = this.game.gridToPixels(nexty);
-            ghost.isMoving = true;
-            return
+        // If next position is invalid, choose new direction
+        if (this.game.gameBoard.map[nextGridY] && this.game.gameBoard.map[nextGridY][nextGridX] === 1) {
+            ghost.direction = this.randomValidDirection(ghost);
 
-        } else if (this.game.gameBoard.map[nexty] && this.game.gameBoard.map[nexty][nextx] === 2) {
-
-            if (ghost.direction === 'up') nexty--;
-            else if (ghost.direction === 'down') nexty++;
-            else if (ghost.direction === 'left') nextx--;
-            else if (ghost.direction === 'right') nextx++;
-
-            // If next position is invalid, choose new direction
-            if (this.game.gameBoard.map[nexty] && this.game.gameBoard.map[nexty][nextx] === 1) {
-                ghost.direction = this.randomValidDirection(ghost);
-                
-                // Recalculate next position with new direction
-                nextx = ghost.x;
-                nexty = ghost.y;
-                
-                if (ghost.direction === 'up') nexty--;
-                else if (ghost.direction === 'down') nexty++;
-                else if (ghost.direction === 'left') nextx--;
-                else if (ghost.direction === 'right') nextx++;
-            }
-                
-            // Set target position
-            ghost.targetX = this.game.gridToPixels(nextx);
-            ghost.targetY = this.game.gridToPixels(nexty);
-            ghost.isMoving = true;
+            // Recalculate next position with new direction
+            nextGridX = ghost.gridX;
+            nextGridY = ghost.gridY;
+            
+            if (ghost.direction === 'up') nextGridY--;
+            else if (ghost.direction === 'down') nextGridY++;
+            else if (ghost.direction === 'left') nextGridX--;
+            else if (ghost.direction === 'right') nextGridX++;
         }
+            
+        // Set target position
+        ghost.nextPixelX = this.game.gridToPixels(nextGridX);
+        ghost.nextPixelY = this.game.gridToPixels(nextGridY);
+        ghost.isMoving = true;
     }
 
     randomValidDirection(ghost) { 
@@ -184,21 +158,18 @@ export class Ghosts {
         
         // Check each direction for validity
         for (const dir of this.directions) {
-            let checkX = ghost.x;
-            let checkY = ghost.y;
+            let nextGridX = ghost.gridX;
+            let nextGridY = ghost.gridY;
             
-            if (dir === 'up') checkY--;
-            else if (dir === 'down') checkY++;
-            else if (dir === 'left') checkX--;
-            else if (dir === 'right') checkX++;
+            if (dir === 'up') nextGridY--;
+            else if (dir === 'down') nextGridY++;
+            else if (dir === 'left') nextGridX--;
+            else if (dir === 'right') nextGridX++;
             
-            if (this.game.gameBoard.map[checkY] && (this.game.gameBoard.map[checkY][checkX] !== 1 || this.game.gameBoard.map[checkY][checkX] === 2)) {
+            if (this.game.gameBoard.map[nextGridY] && this.game.gameBoard.map[nextGridY][nextGridX] !== 1) {
                 validDirections.push(dir);
             }
         }
-        
-        // If no valid directions (shouldn't happen), return current direction
-        if (validDirections.length === 0) return ghost.direction;
         
         // Return a random valid direction
         return validDirections[Math.floor(Math.random() * validDirections.length)];
@@ -208,14 +179,14 @@ export class Ghosts {
         const moveDistance = this.game.ghostSpeed * deltaTime;
         
         // Calculate direction vector
-        const dx = ghost.targetX - ghost.pixelX;
-        const dy = ghost.targetY - ghost.pixelY;
+        const dx = ghost.nextPixelX - ghost.pixelX;
+        const dy = ghost.nextPixelY - ghost.pixelY;
         const distance = Math.sqrt(dx * dx + dy * dy);
         
         // If we're very close to target, snap to it
         if (distance < moveDistance) {
-            ghost.pixelX = ghost.targetX;
-            ghost.pixelY = ghost.targetY;
+            ghost.pixelX = ghost.nextPixelX;
+            ghost.pixelY = ghost.nextPixelY;
             ghost.isMoving = false;
         } else {
             // Move towards target
@@ -248,14 +219,14 @@ export class Ghosts {
             const ghost = this.ghosts[val];
             
             // Reset to initial positions
-            ghost.x = val === 'red' || val === 'orange'? 4: val === 'bleu' || val === 'pink' ? 17 : 9;
-            ghost.y = val === 'red' || val === 'bleu'? 5: val === 'orange' || val === 'pink' ? 15 : 13;
+            ghost.gridX = val === 'red' || val === 'orange'? 4: 17;
+            ghost.gridY = val === 'red' || val === 'bleu'? 5: 15;
             
-            ghost.pixelX = this.game.gridToPixels(ghost.x);
-            ghost.pixelY = this.game.gridToPixels(ghost.y);
+            ghost.pixelX = this.game.gridToPixels(ghost.gridX);
+            ghost.pixelY = this.game.gridToPixels(ghost.gridY);
             
             // Reset movement
-            ghost.direction = val === 'red' || val === 'orange'? 'right': val === 'bleu' || val === 'pink'? 'left': 'up';
+            ghost.direction = val === 'red' || val === 'orange'? 'right': 'left';
             ghost.isMoving = false;
         });
     }

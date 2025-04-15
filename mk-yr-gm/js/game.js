@@ -41,7 +41,7 @@ export class Game {
         console.log('Initializing game...');
 
         // To change speeds during gameplay:
-        this.setSpeeds(100, 80); // Faster Pacman (8 cells/sec), faster ghosts (5 cells/sec)
+        // this.setSpeeds(180, 170); // Faster Pacman (8 cells/sec), faster ghosts (5 cells/sec)
 
         // Create game board and level
         this.gameBoard.createBoard();
@@ -66,7 +66,7 @@ export class Game {
         // Calculate delta time (in seconds for easier calculations)
         this.deltaTime = (timestamp - this.lastTime) / 1000;
         this.lastTime = timestamp;
-        
+
         // Limit delta time to prevent large jumps
         if (this.deltaTime > 0.1) this.deltaTime = 0.1;
 
@@ -74,19 +74,14 @@ export class Game {
             // Update timer
             this.timeRemaining -= this.deltaTime;
             this.ui.updateTimer(Math.ceil(this.timeRemaining));
-            
-            // Handle player movement
+
             this.player.update(this.deltaTime);
-            
-            // Handle ghost movement
+
             this.ghosts.update(this.deltaTime);
-            
-            // Check for collisions after movement
+
             this.ghosts.checkCollisionWithPlayer(this.player.pixelX, this.player.pixelY);
-            
-            // Check for dot collection
+
             this.player.checkDotCollection();
-            
         }
 
         if (this.score >= this.maxScore) {
@@ -98,13 +93,13 @@ export class Game {
             this.ui.showMenu('game over')
             return;
         }
-        // console.log('rr')
+
         if (this.pause) {
             this.ui.showMenu('pause')
         } else if (!this.inGame) {
             this.ui.showMenu('start')
         }
-        
+
         // Continue the game loop
         this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
     }
@@ -112,6 +107,15 @@ export class Game {
     resetPosition() {
         this.player.reset();
         this.ghosts.reset();
+    }
+
+    resetData() {
+        this.victory = false
+        this.gameOver = false
+        this.inGame = false
+        this.score = 0
+        this.lives = 5
+        this.timeRemaining = 180;
     }
     
     pixelsToGrid(pixels) {

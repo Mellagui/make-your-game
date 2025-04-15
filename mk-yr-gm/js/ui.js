@@ -29,6 +29,7 @@ export class UI {
 
     // End-Event Animations Handler
     showMenu(content) {
+        // this.finalScoreElement.textContent = score;
         menuContent.innerHTML = content;
         overLayer.style.display = 'block';
         popUp.style.display = 'block';
@@ -39,14 +40,4 @@ export class UI {
         overLayer.style.display = 'none';
         popUp.style.display = 'none';
     }
-    
-    // showGameOver(score) {
-    //     this.finalScoreElement.textContent = score;
-    //     this.gameOverScreen.classList.remove('hidden');
-    // }
-    
-    // showVictory(score) {
-    //     this.victoryScoreElement.textContent = score;
-    //     this.victoryScreen.classList.remove('hidden');
-    // }
 }
