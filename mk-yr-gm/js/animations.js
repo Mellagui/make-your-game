@@ -1,44 +1,47 @@
 export class ElementAnimator {
     constructor(element, animations) {
-        this.element = element
-        this.animations = animations
-        this.currentAnimation = null
-        // this.currentFrame = 0
-        // this.lastAnimationStamp
+        this.element = element;
+        this.animations = animations;
+        this.currentAnimation = null;
 
-        this.frameIndex = 0
-        this.frameWidth = 20 // Width of one Pac-Man frame
-        this.totalFrames = 6 // Number of frames in the sprite || 0 = last frame || 1 = first frame
-        
+        this.frameIndex = 0;
+        this.frameWidth = 20; // Width of one Pac-Man frame
+        this.totalFrames = 6;
+
+        this.animationFrameId = null; // To stop animation
+        this.isAnimating = false;
     }
 
     setAnimation(name) {
-
-        
-        // if (this.currentAnimation === this.animations[name]) return
-        
         this.currentAnimation = this.animations[name];
-        // this.totalFrames = 0
-        
-        this.element.style.backgroundImage = "url('" + this.currentAnimation.path + "')";
-        this.element.style.backgroundSize = '120px 20px';
-        this.element.style.position = '20px 20px';
-        
-        // const img = document.createElement('img');
-        // img.src = `${path}`;
-        // this.element.appendChild(img);
+        this.totalFrames = this.currentAnimation.frameCount;
 
-        // if (name.includes('left') && !name.includes('fly')) {
-        //     this.element.style.transform = "scaleX(-1)";
-        //     name = name.replace('left', 'right')
-        // }
-        
+        this.element.style.backgroundImage = `url('${this.currentAnimation.path}')`;
+        this.element.style.backgroundSize = `${this.frameWidth * this.totalFrames}px 20px`;
+        this.element.style.backgroundRepeat = 'no-repeat';
+        this.element.style.backgroundPosition = '0px 0px';
     }
 
-    animate() {
+    start() {
+        if (this.isAnimating) return;
+        this.isAnimating = true;
+        this.animate();
+    }
+
+    stop() {
+        if (!this.isAnimating) return;
+        this.isAnimating = false;
+        cancelAnimationFrame(this.animationFrameId);
+    }
+
+    animate = () => {
+        if (!this.isAnimating) return;
+
         this.frameIndex = (this.frameIndex + 1) % this.totalFrames;
-        this.element.style.backgroundPosition = `-${this.frameIndex * this.frameWidth}px 0px`; 
-        
-        setTimeout(() => requestAnimationFrame(this.animate), 100);
+        this.element.style.backgroundPosition = `-${this.frameIndex * this.frameWidth}px 0px`;
+
+        this.animationFrameId = requestAnimationFrame(() => {
+            setTimeout(this.animate, 60); // You can tweak this for speed (e.g. 100ms/frame)
+        });
     }
 }

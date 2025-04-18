@@ -35,36 +35,49 @@ export class Game {
 
         // Animation frame reference
         this.animationFrameId = null;
+
+        this.currentMenu = false;
+
+        // In Game constructor
+        this.gameLoop = this.gameLoop.bind(this);
     }
 
     init() {
         console.log('Initializing game...');
 
-        // To change speeds during gameplay:
-        // this.setSpeeds(180, 170); // Faster Pacman (8 cells/sec), faster ghosts (5 cells/sec)
-
-        // Create game board and level
         this.gameBoard.createBoard();
 
-        // Create player after the game board is ready
+        // this.setSpeeds(120, 100)
+
         this.player = new Player(this);
         this.ghosts = new Ghosts(this);
 
-        // Update UI
         this.ui.updateScore(this.score);
         this.ui.updateLives(this.lives);
         this.ui.updateTimer(this.timeRemaining);
+        this.ui.showMenu('start')
         
         // Start the game loop
-        this.lastTime = performance.now();
-        this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
-
+        this.startGameLoop()
+        
         console.log('Game initialized successfully');
+    }
+    
+    // Start the game loop
+    startGameLoop() {
+        this.lastTime = performance.now();
+        this.animationFrameId = requestAnimationFrame(this.gameLoop);
+    }
+    cancelGameLoop() {
+        // Stop previous loop
+        cancelAnimationFrame(this.animationFrameId);
     }
 
     gameLoop(timestamp) {
+        if (!this.lastTime) this.lastTime = timestamp;
+        
         // Calculate delta time (in seconds for easier calculations)
-        this.deltaTime = (timestamp - this.lastTime) / 1000;
+        this.deltaTime = (timestamp - this.lastTime) / 1000; // Convert to seconds
         this.lastTime = timestamp;
 
         // Limit delta time to prevent large jumps
@@ -84,24 +97,27 @@ export class Game {
             this.player.checkDotCollection();
         }
 
-        if (this.score >= this.maxScore) {
-            this.victory = true;
-            this.ui.showMenu('you win')
-            return
-        } else if (this.timeRemaining <= 0 || this.lives === 0) {
-            this.gameOver = true;
-            this.ui.showMenu('game over')
-            return;
-        }
+        if (!this.currentMenu) {
+            if (this.score >= this.maxScore) {
+                this.victory = true;
+                this.ui.showMenu('you win')
+                return
+            } else if (this.timeRemaining <= 0 || this.lives === 0) {
+                this.gameOver = true;
+                this.ui.showMenu('game over')
+                return;
+            }
 
-        if (this.pause) {
-            this.ui.showMenu('pause')
-        } else if (!this.inGame) {
-            this.ui.showMenu('start')
+            if (this.pause) {
+                this.ui.showMenu('pause')
+            } else if (!this.inGame) {
+                this.ui.showMenu('start')
+            }
         }
+        // console.log('here')
 
         // Continue the game loop
-        this.animationFrameId = requestAnimationFrame(this.gameLoop.bind(this));
+        this.animationFrameId = requestAnimationFrame(this.gameLoop);
     }
 
     resetPosition() {
@@ -109,13 +125,17 @@ export class Game {
         this.ghosts.reset();
     }
 
-    resetData() {
+    resetGame() {
+        this.cancelGameLoop()
+
         this.victory = false
         this.gameOver = false
         this.inGame = false
         this.score = 0
         this.lives = 5
         this.timeRemaining = 180;
+
+        this.init()
     }
     
     pixelsToGrid(pixels) {
@@ -126,7 +146,6 @@ export class Game {
         return grid * this.cellSize;
     }
 
-    // Method to change speeds if needed (in pixels per second)
     setSpeeds(pacmanSpeed, ghostSpeed) {
         this.pacmanSpeed = pacmanSpeed;
         this.ghostSpeed = ghostSpeed;

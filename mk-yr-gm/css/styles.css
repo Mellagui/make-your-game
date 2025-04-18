@@ -54,7 +54,21 @@ body {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding: 4px;
+    margin: 0.5rem;
+}
+
+.btn {
+    border: none;
+}
+.btn:hover {
+    cursor: pointer;
+}
+
+i { 
+    font-size: 2rem;
+    filter: drop-shadow(0 0 2px rgba(255, 238, 88, 0.8));
+    background-color: #694444;
+    color: #FFEE58;
 }
     
 .handle-score {
@@ -65,12 +79,13 @@ body {
     font-weight: bold;
 }
 
-.score, .time {
-    margin-left: 2rem;
-    margin-right: 2rem;
+.score, .time, .lives, .btn {
+    margin-left: 1rem;
+    margin-right: 1rem;
     display: flex;
     align-items: center;
 }
+
 
 .subject-body {
     display: flex;
@@ -94,7 +109,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    /* position: relative; */
 }
 
 .dot {
@@ -125,6 +139,7 @@ body {
     z-index: 10;
     /* z-index: 1; */
     border-radius: 50%;
+    transform: translate3d(0,0,0); /* for layer */
 }
 
 /* Ghost animations */
@@ -132,6 +147,18 @@ body {
 .orangeGhost img, .pinkGhost img {
     filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
 }
+/* .redGhost {
+    color: red;
+}
+.bleuGhost {
+    color: aqua;
+}
+.orangeGhost {
+    color: orange;
+}
+.pinkGhost {
+    color: pink;
+} */
 
 .pacMan {
     background-image: url('../assets/character/pm-frames.png');

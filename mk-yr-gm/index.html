@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pac-Man</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
 </head>
 <body>
     <div class="game-container">
@@ -21,8 +23,8 @@
                 </div>
 
                 <div class="handle-score">
-                    <div class="score">score: <span id="score"> 0000</span></div>
-                    <div class="time">time: <span id="timer">  180</span></div>
+                    <div class="score">score: <span id="score"></span></div>
+                    <div class="time">time: <span id="timer"></span></div>
                 </div>
             </div>
 
@@ -33,16 +35,19 @@
             <div class="subject-footer">
                 <!-- lives -->
                 <div class="handle-score">                
-                    <div class="score" style="margin: 0;">
-                        <img src="assets/character/idle.png" class="pacLife" style="width: 2rem; height: 2rem;" >
-                        <img src="assets/character/idle.png" class="pacLife" style="width: 2rem; height: 2rem;" >
-                        <img src="assets/character/idle.png" class="pacLife" style="width: 2rem; height: 2rem;" >
-                        <img src="assets/character/idle.png" class="pacLife" style="width: 2rem; height: 2rem;" >
-                        <img src="assets/character/idle.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                    <div class="lives">
+                        <i class='bx bxs-game' ></i>
+                        <i class='bx bxs-game' ></i>
+                        <i class='bx bxs-game' ></i>
+                        <i class='bx bxs-game' ></i>
+                        <i class='bx bxs-game' ></i>
                     </div>
-                </div>
 
-                <!-- handle fruit score -->
+                    <!-- fruit score -->
+
+                    <!-- reset -->
+                    <button type="button" class='btn' id="reset"><i class='bx bx-reset'></i></button>
+                </div>
             </div>
         </div>
     </div>
