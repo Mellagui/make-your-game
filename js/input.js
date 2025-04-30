@@ -16,14 +16,14 @@ export class InputHandler {
         document.getElementById('reset').onclick = () => this.game.resetGame();
 
         document.addEventListener('keydown', e => {
-            if ((e.key === ' ' || e.key === 'p') && this.game.inGame) {
+            if ((e.key === ' ' || e.key === 'p') && this.game.inGame && !this.game.victory && !this.game.gameOver) {
                 if (this.game.pause) this.game.ui.hideMenu();
-                this.game.pause = this.game.pause? false: true;
-                return
+                return this.game.pause = this.game.pause? false: true;
             }
 
             if (this.game.victory || this.game.gameOver) {
                 this.game.resetGame();
+                return
             } else if (!this.game.inGame) {
                 this.game.resetPosition();
                 this.game.ui.hideMenu();

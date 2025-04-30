@@ -12,9 +12,9 @@ export class Player {
         this.animations = {
             'pm-frames': {
                 path: 'assets/character/pacman-frames.png',
-                frameCount: 6,
-            },
-        };
+                frameCount: 6
+            }
+        }
 
         // Movement properties
         this.nextDirection = '';
@@ -40,9 +40,7 @@ export class Player {
     }
 
     createPlayerElement() {
-        if (this.pacmanElement) { // remove any existing player element
-            this.pacmanElement.remove();
-        }
+        if (this.pacmanElement) this.pacmanElement.remove(); // remove any existing player element
 
         this.pacmanElement = document.createElement('div');
         this.pacmanElement.className = this.name;
@@ -94,11 +92,11 @@ export class Player {
         }
 
         if (this.isMoving) {
-            if (!this.animator.isAnimating) this.animator.start(); // ✅ start animation when moving
+            if (!this.animator.isAnimating) this.animator.start(); // start animation when moving
 
             this.move(deltaTime);
 
-        } else this.animator.stop(); // 🛑 stop when idle
+        } else this.animator.stop(); // stop when idle
 
         this.render();
     }
@@ -115,7 +113,7 @@ export class Player {
         else if (this.nextDirection === 'right') x++;
         
         // Check if the new direction is valid (not a wall)
-        if (this.game.gameBoard.map[y]?.[x] !== 1) return this.direction = this.nextDirection
+        if (this.game.gameBoard.map[y]?.[x] !== 1) return this.direction = this.nextDirection;
     }
 
     incresPlayerPosition() {
@@ -162,7 +160,7 @@ export class Player {
         if (this.game.gameBoard.map[this.gridY]?.[this.gridX] !== 1) {
             const pacmanCell = document.getElementById(`${this.gridX}-${this.gridY}`);
 
-            if (pacmanCell?.dataset.hasDot === 'true') { // pacmanCell && 
+            if (pacmanCell?.dataset.hasDot === 'true') {
                 pacmanCell.classList.remove('dot');
                 pacmanCell.dataset.hasDot = 'false';
                 this.game.score += 10;

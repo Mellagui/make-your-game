@@ -70,18 +70,19 @@ export class Ghosts {
             if (ghost.ghostElement) {
                 ghost.ghostElement.remove();
             }
+            // // for svg ghost elements
             // <i class='bx bx-ghost' ></i>
-            ghost.ghostElement = document.createElement('div');
-            ghost.ghostElement.className = ghost.name;
             // ghost.ghostElement.classList.add('bx')
             // ghost.ghostElement.classList.add('bx-ghost')
-            ghost.ghostElement.style.width = `${this.width}px`;//
-            ghost.ghostElement.style.height = `${this.height}px`;//
+
+            ghost.ghostElement = document.createElement('div');
             ghost.ghostElement.id = ghost.name;
+            ghost.ghostElement.className = ghost.name;
+            ghost.ghostElement.style.width = `${this.width}px`;
+            ghost.ghostElement.style.height = `${this.height}px`;
             
             const img = document.createElement('img');
             img.src = ghost.path;
-            img.style.padding = '1px'
             ghost.ghostElement.appendChild(img);
 
             this.game.gameBoard.board.appendChild(ghost.ghostElement);
@@ -91,9 +92,7 @@ export class Ghosts {
     }
     
     render(ghost) {
-        if (ghost.ghostElement) {
-            ghost.ghostElement.style.transform = `translate(${ghost.pixelX}px, ${ghost.pixelY}px)`;
-        }
+        if (ghost.ghostElement) ghost.ghostElement.style.transform = `translate(${ghost.pixelX}px, ${ghost.pixelY}px)`;
     }
 
     update(deltaTime) {
@@ -109,9 +108,7 @@ export class Ghosts {
                 this.decideGhostMove(ghost);
             }
 
-            if (ghost.isMoving) {
-                this.move(ghost, deltaTime);
-            }
+            if (ghost.isMoving) this.move(ghost, deltaTime);
 
             this.render(ghost);
         });

@@ -9,10 +9,10 @@ export class Game {
         // game state
         this.lastTime = 0;
         this.deltaTime = 0;
+        this.maxScore = 0;
         this.inGame = false;
         this.victory = false;
         this.gameOver = false;
-        this.maxScore = 0;
         this.pause = false;
 
         // game metrics
@@ -21,7 +21,7 @@ export class Game {
         this.timeRemaining = 180; // 3 minutes
  
         // movement settings (pixels per second)
-        this.pacmanSpeed = 100; // 120px per second = 6 cells per second (20px cells) // 6 cells per second (120/20)
+        this.pacmanSpeed = 100;  // 120px per second = 6 cells per second (20px cells) // 6 cells per second (120/20)
         this.ghostSpeed = 80;    // 80px per second = 4 cells per second // 4 cells per second (80/20)
         this.cellSize = 20;      // Size of each cell in pixels
 
@@ -47,7 +47,7 @@ export class Game {
 
         this.gameBoard.createBoard();
 
-        // this.setSpeeds(120, 100)
+        // this.setSpeeds(120, 100);
 
         this.player = new Player(this);
         this.ghosts = new Ghosts(this);
@@ -55,27 +55,28 @@ export class Game {
         this.ui.updateScore(this.score);
         this.ui.updateLives(this.lives);
         this.ui.updateTimer(this.timeRemaining);
-        this.ui.showMenu('start')
+        this.ui.showMenu('start');
         
         // Start the game loop
-        this.startGameLoop()
+        this.startGameLoop();
         
         console.log('Game initialized successfully');
     }
-    
+
     // Start the game loop
     startGameLoop() {
         this.lastTime = performance.now();
         this.animationFrameId = requestAnimationFrame(this.gameLoop);
     }
+
+    // Cancel previous loop
     cancelGameLoop() {
-        // Stop previous loop
         cancelAnimationFrame(this.animationFrameId);
     }
 
     gameLoop(timestamp) {
         if (!this.lastTime) this.lastTime = timestamp;
-        
+
         // Calculate delta time (in seconds for easier calculations)
         this.deltaTime = (timestamp - this.lastTime) / 1000; // Convert to seconds
         this.lastTime = timestamp;
@@ -98,23 +99,19 @@ export class Game {
         }
 
         if (!this.currentMenu) {
-            if (this.score >= this.maxScore) {
+            if (this.score >= this.maxScore /* 100 */) {
                 this.victory = true;
-                this.ui.showMenu('you win')
+                this.ui.showMenu('you win');
                 return
             } else if (this.timeRemaining <= 0 || this.lives === 0) {
                 this.gameOver = true;
-                this.ui.showMenu('game over')
-                return;
+                this.ui.showMenu('game over');
+                return
             }
 
-            if (this.pause) {
-                this.ui.showMenu('pause')
-            } else if (!this.inGame) {
-                this.ui.showMenu('start')
-            }
+            if (this.pause) this.ui.showMenu('continue');
+            else if (!this.inGame) this.ui.showMenu('start');
         }
-        // console.log('here')
 
         // Continue the game loop
         this.animationFrameId = requestAnimationFrame(this.gameLoop);
@@ -126,16 +123,16 @@ export class Game {
     }
 
     resetGame() {
-        this.cancelGameLoop()
+        this.cancelGameLoop();
 
-        this.victory = false
-        this.gameOver = false
-        this.inGame = false
-        this.score = 0
-        this.lives = 5
+        this.victory = false;
+        this.gameOver = false;
+        this.inGame = false;
+        this.score = 0;
+        this.lives = 5;
         this.timeRemaining = 180;
 
-        this.init()
+        this.init();
     }
     
     pixelsToGrid(pixels) {

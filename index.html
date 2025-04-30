@@ -4,192 +4,53 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pac-Man</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <link rel="stylesheet" href="css/styles.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #111;
-            color: whitesmoke;
-        }
-        
-        /* Game container for scaling */
-        .game-container {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
-
-        .subject {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            border: 2px solid white;
-            
-            width: 420px;
-            height: 580px;
-            position: relative;
-        }
-
-        .subject-header, .subject-footer {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
-        }
-        .handle-score {
-            columns: 2;
-            width: 100%;
-            flex-direction: row;
-            justify-content:space-between;
-        }
-        .score {
-            display: flex;
-            justify-content: flex-start;
-            margin-left: 2rem;
-            justify-content:space-between;
-        }
-        .time {
-            display: flex;
-            justify-content: flex-end;
-            margin-right: 2rem;
-        }
-
-        .subject-body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 4px;
-        }
-
-        .game-board {
-            display: grid;
-            grid-template-columns: repeat(21, auto);
-            grid-template-rows: repeat(21, auto);
-            width: auto;
-            height: auto;
-            position: relative;
-        }
-
-        .cell {
-            width: 20px;
-            height: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .dot {
-            margin-top: 9px;
-            margin-left: 9px;
-            
-            background-color: whitesmoke;
-            border-radius: 50%;
-            width: 4px;
-            height: 4px;
-        }
-
-        .wall {
-            background-color: blue;
-        }
-        
-        .redGhost, .bleuGhost, .orangeGhost,
-        .pinkGhost, .darkGhost, .pacMan {
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            position: absolute;
-            /* z-index: 1; */
-            transition: top 0.15s linear, left 0.15s linear;
-        }
-        .pacMan {
-            background-image: url('pacMan-solo.png'); 
-            background-size: 120px 20px; /* Full sprite sheet width */
-            background-position: 20px 20px; /* Start from first frame */
-        }
-
-        img {
-            width: 20px;
-            height: 20px;
-        }
-
-/* Overlay (dimmed background) */
-#overLayer {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
-    z-index: 999; /* Ensure it's above other elements */
-}
-
-/* Popup box */
-#popUp {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255, 255, 255, 0.5); /* Semi-transparent background */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000; /* Higher than overlay */
-    width: 12rem;
-    height: 8rem;
-    justify-items : center;
-    align-content : center;
-    color: rgba(255, 208, 0, 0.934);
-}
-    </style>
 </head>
 <body>
     <div class="game-container">
         <div id="overLayer"></div>
         <div id="popUp">
             <h2 id="menuContent"></h2>
-            <!-- <button id="closePopUp" class="reset-btn">ok</button> -->
         </div>
         <div class="subject">
+
             <div class="subject-header">
-                <div class="title-game"><img src="pacManTitle.png" style="width: 24rem; height: 6rem;"></div>
+                <div class="title-game">
+                    <img src="assets/pm-header.png">
+                </div>
+
                 <div class="handle-score">
-                    <div class="score">score: <span id="score"> 0000</span></div>
-                    <div class="time">time: <span id="time">  180</span></div>
+                    <div class="score">score: <span id="score"></span></div>
+                    <div class="time">time: <span id="timer"></span></div>
                 </div>
             </div>
+
             <div class="subject-body">
                 <div class="game-board" id="game-board"></div>
             </div>
+
             <div class="subject-footer">
                 <div class="handle-score">                
-                    <div class="score" style="margin: 0;">
-                        <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
-                        <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
-                        <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
-                        <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
-                        <img src="pacmansolo.png" class="pacLife" style="width: 2rem; height: 2rem;" >
+                    <!-- lives -->
+                    <div class="lives">
+                        <i class='bx bxs-game' ></i>
+                        <i class='bx bxs-game' ></i>
+                        <i class='bx bxs-game' ></i>
+                        <i class='bx bxs-game' ></i>
+                        <i class='bx bxs-game' ></i>
                     </div>
-                    <!-- <div class="time">time:</div> -->
+
+                    <!-- fruit score -->
+
+                    <!-- reset -->
+                    <button type="button" class='btn' id="reset"><i class='bx bx-reset'></i></button>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="script.js"></script>
-    <!-- <script src="pacman.js"></script> -->
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

@@ -17,8 +17,8 @@ export class UI {
     }
 
     updateLives(lives) {
-        if (lives === 5) return this.livesElement.forEach(live => live.style.color = '#FFEE58')
-        this.livesElement[lives].style.color = '#111'
+        if (lives === 5) return this.livesElement.forEach(live => live.style.color = '#FFEE58');
+        this.livesElement[lives].style.color = '#111';
     }
 
     updateTimer(time) {
@@ -26,7 +26,7 @@ export class UI {
     }
 
     showMenu(content) {
-        this.game.player.animator.stop(); // 🛑 stop when idle
+        this.game.player.animator.stop(); // stop when idle
         this.game.currentMenu = true;
 
         menuContent.innerHTML = content;

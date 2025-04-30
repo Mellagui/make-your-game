@@ -19,23 +19,22 @@ export class ElementAnimator {
         this.element.style.backgroundImage = `url('${this.currentAnimation.path}')`;
         this.element.style.backgroundSize = `${this.frameWidth * this.totalFrames}px 20px`;
         this.element.style.backgroundRepeat = 'no-repeat';
-        this.element.style.backgroundPosition = '0px 0px';
     }
 
     start() {
-        if (this.isAnimating) return;
+        if (this.isAnimating) return
         this.isAnimating = true;
         this.animate();
     }
 
     stop() {
-        if (!this.isAnimating) return;
+        if (!this.isAnimating) return
         this.isAnimating = false;
         cancelAnimationFrame(this.animationFrameId);
     }
 
     animate = () => {
-        if (!this.isAnimating) return;
+        if (!this.isAnimating) return
 
         this.frameIndex = (this.frameIndex + 1) % this.totalFrames;
         this.element.style.backgroundPosition = `-${this.frameIndex * this.frameWidth}px 0px`;

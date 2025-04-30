@@ -97,7 +97,7 @@ export class GameBoard {
                 this.board.appendChild(cell);
             }
         }
-        this.game.maxScore = document.querySelectorAll('.dot').length * 10
+        this.game.maxScore = document.querySelectorAll('.dot').length * 10;
     }
     
     createCell(x, y) {

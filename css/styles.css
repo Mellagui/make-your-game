@@ -146,6 +146,7 @@ i {
 .redGhost img, .bleuGhost img, 
 .orangeGhost img, .pinkGhost img {
     filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
+    padding: 1px;
 }
 /* .redGhost {
     color: red;
@@ -161,10 +162,10 @@ i {
 } */
 
 .pacMan {
-    background-image: url('../assets/character/pm-frames.png');
-    background-size: 120px 20px; /* Full sprite sheet width */
-    background-position: 0 0; /* Start from first frame */
-    background-position: 20px 20px;
+    /* background-image: url('../assets/character/pacman-frames.png'); */
+    /* background-size: 120px 20px; Full sprite sheet width */
+    /*background-position: 0 0; /* Start from first frame */
+    /* background-position: 20px 20px; */
     transform-origin: center;
     z-index: 20;
 }
