@@ -57,39 +57,6 @@ body {
     margin: 0.5rem;
 }
 
-.bx-game, .bxs-game {
-    font-size: xx-large;
-    filter: drop-shadow(0 0 2px rgba(255, 238, 88, 0.8));
-    background-color: #694444;
-    color: #FFEE58;
-}
-
-#sub-title {
-    color:#ffffff;
-    padding-top: 0.6rem;
-    font-size: medium;
-}
-
-button {
-    color: #FFEE58;
-    font-size: 1.6rem;
-    font-weight: 600;
-    border: 4px solid #FFEE58;
-    border-radius: 4px;
-    width: 6rem;
-    height: 3rem;
-    background-color: #000;
-    margin-top: 1.6rem;
-    cursor: pointer;
-}
-
-button.hovered {
-    cursor: pointer;
-    filter: drop-shadow(0 0 2px rgba(255, 238, 88, 0.9));
-    background: rgba(255, 238, 88, 0.08); /* Transparent on hover */
-    color: #f7f1b7;                /* Text becomes colored */
-}
-
 .handle-score {
     width: 100%;
     justify-content:space-between;
@@ -206,6 +173,7 @@ button.hovered {
     font-size: 2rem;
     justify-items : center;
     align-content : center;
+    text-align: center;
 }
 
 #menuContent {
@@ -216,6 +184,40 @@ button.hovered {
         0 0 10px #FFEE58, 
         0 0 20px #000;
     text-transform: uppercase;
+    
+}
+
+#sub-title {
+    color:#ffffff;
+    padding-top: 0.6rem;
+    font-size: medium;
+}
+
+button {
+    color: #FFEE58;
+    font-size: 1.6rem;
+    font-weight: 600;
+    border: 4px solid #FFEE58;
+    border-radius: 4px;
+    width: 6rem;
+    height: 3rem;
+    background-color: #000;
+    margin-top: 1.6rem;
+    cursor: pointer;
+}
+
+button.hovered {
+    cursor: pointer;
+    filter: drop-shadow(0 0 2px rgba(255, 238, 88, 0.9));
+    background: rgba(255, 238, 88, 0.08); /* Transparent on hover */
+    color: #f7f1b7;                /* Text becomes colored */
+}
+
+.bx-game, .bxs-game {
+    font-size: xx-large;
+    filter: drop-shadow(0 0 2px rgba(255, 238, 88, 0.8));
+    background-color: #694444;
+    color: #FFEE58;
 }
 
 /* Responsive adjustments */

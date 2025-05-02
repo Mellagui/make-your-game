@@ -118,11 +118,13 @@ export class Ghosts {
         if (this.game.player.gridX === ghost.gridX) {
             if (this.game.player.gridY > ghost.gridY) {
                 return 'down'
-            } else return 'up'
+            }
+            return 'up'
         } else if (this.game.player.gridY === ghost.gridY) {
             if (this.game.player.gridX > ghost.gridX) {
                 return 'right'
-            } else return 'left'
+            }
+            return 'left'
         }
     }
 
@@ -135,7 +137,7 @@ export class Ghosts {
         else if (ghost.direction === 'right') nextGridX++;
 
         // if next position is invalid, choose new direction
-        if (this.game.gameBoard.map[ghost.gridX]?.[ghost.gridY] === 2) {
+        if (this.game.gameBoard.map[ghost.gridY]?.[ghost.gridX] === 2) {
             if (this.game.player.gridX === ghost.gridX || this.game.player.gridY === ghost.gridY) {
                 ghost.direction = this.playerTrack(ghost)
 
@@ -146,7 +148,7 @@ export class Ghosts {
                 else if (ghost.direction === 'left') nextGridX--;
                 else if (ghost.direction === 'right') nextGridX++;
 
-                if (this.game.gameBoard.map[nextGridX]?.[nextGridY] === 1) {
+                if (this.game.gameBoard.map[nextGridY]?.[nextGridX] === 1) {
                     ghost.direction = this.randomValidDirection(ghost);
                 }
 

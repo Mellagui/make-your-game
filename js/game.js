@@ -71,10 +71,12 @@ export class Game {
 
     // Cancel previous loop
     cancelGameLoop() {
+        // this.animationFrameId = null;
         cancelAnimationFrame(this.animationFrameId);
     }
 
     gameLoop(timestamp) {
+        // console.log(this.animationFrameId)
         if (!this.lastTime) this.lastTime = timestamp;
 
         // Calculate delta time (in seconds for easier calculations)
@@ -134,13 +136,13 @@ export class Game {
         
         this.victory = false;
         this.gameOver = false;
+        this.pause = false;
         this.inGame = false;
         this.score = 0;
         this.lives = 5;
         this.timeRemaining = 180;
         
         console.log('game restarted')
-
         this.init();
     }
     
