@@ -114,6 +114,18 @@ export class Ghosts {
         });
     }
 
+    playerTrack(ghost) {
+        if (this.game.player.gridX === ghost.gridX) {
+            if (this.game.player.gridY > ghost.gridY) {
+                return 'down'
+            } else return 'up'
+        } else if (this.game.player.gridY === ghost.gridY) {
+            if (this.game.player.gridX > ghost.gridX) {
+                return 'right'
+            } else return 'left'
+        }
+    }
+
     decideGhostMove(ghost) {
         let nextGridX = ghost.gridX, nextGridY = ghost.gridY;
 
@@ -123,8 +135,22 @@ export class Ghosts {
         else if (ghost.direction === 'right') nextGridX++;
 
         // if next position is invalid, choose new direction
-        if (this.game.gameBoard.map[nextGridY]?.[nextGridX] === 1) {
-            ghost.direction = this.randomValidDirection(ghost);
+        if (this.game.gameBoard.map[ghost.gridX]?.[ghost.gridY] === 2) {
+            if (this.game.player.gridX === ghost.gridX || this.game.player.gridY === ghost.gridY) {
+                ghost.direction = this.playerTrack(ghost)
+
+                nextGridX = ghost.gridX, nextGridY = ghost.gridY;
+
+                if (ghost.direction === 'up') nextGridY--;
+                else if (ghost.direction === 'down') nextGridY++;
+                else if (ghost.direction === 'left') nextGridX--;
+                else if (ghost.direction === 'right') nextGridX++;
+
+                if (this.game.gameBoard.map[nextGridX]?.[nextGridY] === 1) {
+                    ghost.direction = this.randomValidDirection(ghost);
+                }
+
+            } else ghost.direction = this.randomValidDirection(ghost);
 
             nextGridX = ghost.gridX; nextGridY = ghost.gridY;
 
@@ -141,7 +167,7 @@ export class Ghosts {
     }
 
     randomValidDirection(ghost) {
-        const validDirections = this.directions.filter(dir => {
+        let validDirections = this.directions.filter(dir => {
             let nextGridX = ghost.gridX, nextGridY = ghost.gridY;
 
             if (dir === 'up') nextGridY--;
@@ -151,6 +177,8 @@ export class Ghosts {
 
             return this.game.gameBoard.map[nextGridY]?.[nextGridX] !== 1;
         })
+
+        // if (validDirections.length > 1) validDirections.map(val => val != ghost.direction);
 
         return validDirections[Math.floor(Math.random() * validDirections.length)];
     }
@@ -172,6 +200,7 @@ export class Ghosts {
             // Move towards target
             ghost.pixelX += (dx / distance) * moveDistance;
             ghost.pixelY += (dy / distance) * moveDistance;
+            // console.log()
         }
     }
 

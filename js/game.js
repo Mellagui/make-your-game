@@ -55,7 +55,7 @@ export class Game {
         this.ui.updateScore(this.score);
         this.ui.updateLives(this.lives);
         this.ui.updateTimer(this.timeRemaining);
-        this.ui.showMenu('start');
+        this.ui.showMenu('start game');
         
         // Start the game loop
         this.startGameLoop();
@@ -101,16 +101,23 @@ export class Game {
         if (!this.currentMenu) {
             if (this.score >= this.maxScore /* 100 */) {
                 this.victory = true;
-                this.ui.showMenu('you win');
+                this.ui.showMenu('win');
+                console.log('you win')
                 return
             } else if (this.timeRemaining <= 0 || this.lives === 0) {
                 this.gameOver = true;
                 this.ui.showMenu('game over');
+                console.log('you lose')
                 return
             }
 
-            if (this.pause) this.ui.showMenu('continue');
-            else if (!this.inGame) this.ui.showMenu('start');
+            if (this.pause) {
+                this.ui.showMenu('game pause');
+                console.log('pause')
+            } else if (!this.inGame) {
+                this.ui.showMenu('continue');
+                console.log('life -1')
+            }
         }
 
         // Continue the game loop
@@ -121,16 +128,18 @@ export class Game {
         this.player.reset();
         this.ghosts.reset();
     }
-
+    
     resetGame() {
         this.cancelGameLoop();
-
+        
         this.victory = false;
         this.gameOver = false;
         this.inGame = false;
         this.score = 0;
         this.lives = 5;
         this.timeRemaining = 180;
+        
+        console.log('game restarted')
 
         this.init();
     }

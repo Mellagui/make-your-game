@@ -1,56 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pac-Man</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pac-Man</title>
+        <link rel="stylesheet" href="css/styles.css">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    </head>
 
-</head>
-<body>
-    <div class="game-container">
-        <div id="overLayer"></div>
-        <div id="popUp">
-            <h2 id="menuContent"></h2>
-        </div>
-        <div class="subject">
-
-            <div class="subject-header">
-                <div class="title-game">
-                    <img src="assets/pm-header.png">
-                </div>
-
-                <div class="handle-score">
-                    <div class="score">score: <span id="score"></span></div>
-                    <div class="time">time: <span id="timer"></span></div>
-                </div>
-            </div>
-
-            <div class="subject-body">
-                <div class="game-board" id="game-board"></div>
-            </div>
-
-            <div class="subject-footer">
-                <div class="handle-score">                
-                    <!-- lives -->
-                    <div class="lives">
-                        <i class='bx bxs-game' ></i>
-                        <i class='bx bxs-game' ></i>
-                        <i class='bx bxs-game' ></i>
-                        <i class='bx bxs-game' ></i>
-                        <i class='bx bxs-game' ></i>
-                    </div>
-
-                    <!-- fruit score -->
-
+    <body>
+        <div class="game-container">
+            <div id="overLayer"></div>
+                <div id="popUp">
+                    <!-- menu title -->
+                    <h2 id="menuContent"></h2>
+                    <!-- menu sub-title -->
+                    <h5 id="sub-title"></h5>
+                    
+                    <!-- contunie -->
+                    <button type="button" class='btn' id="continue"><!--<i class='bx bx-play'></i>-->play</button> 
                     <!-- reset -->
-                    <button type="button" class='btn' id="reset"><i class='bx bx-reset'></i></button>
+                    <button type="button" class='btn' id="reset"><!--<i class='bx bx-reset'></i>-->reset</button>
+                </div>
+
+                <div class="subject">
+                    <div class="subject-header">
+                        <div class="title-game">
+                            <img src="assets/pm-header.png">
+                        </div>
+        
+                        <div class="handle-score">
+                            <!-- score -->
+                            <div class="score">score: <span id="score"></span></div>
+                            <!-- timer -->
+                            <div class="time">time: <span id="timer"></span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="subject-body">
+                        <!-- game-board -->
+                        <div class="game-board" id="game-board"></div>
+                    </div>
+        
+                    <div class="subject-footer">
+                        <div class="handle-score">                
+                            <!-- lives -->
+                            <div class="lives">
+                                <i class='bx bxs-game' ></i>
+                                <i class='bx bxs-game' ></i>
+                                <i class='bx bxs-game' ></i>
+                                <i class='bx bxs-game' ></i>
+                                <i class='bx bxs-game' ></i>
+                            </div>
+                            <!-- fruit score -->
+
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
 
-    <script type="module" src="js/main.js"></script>
-</body>
+        <script type="module" src="js/main.js"></script>
+    </body>
 </html>

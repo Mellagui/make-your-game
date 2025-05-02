@@ -9,6 +9,11 @@ export class UI {
         this.overLayer = document.getElementById('overLayer');
         this.popUp = document.getElementById('popUp');
         this.menuContent = document.getElementById('menuContent');
+        this.subTitle = document.getElementById('sub-title');
+
+        // button
+        this.continue = document.getElementById('continue');
+        this.reset = document.getElementById('reset');
     }
 
     updateScore(score) {
@@ -28,6 +33,17 @@ export class UI {
     showMenu(content) {
         this.game.player.animator.stop(); // stop when idle
         this.game.currentMenu = true;
+        
+        this.continue.style.display = 'block';
+        this.reset.style.display = 'block';
+        this.subTitle.innerHTML = '';
+
+        if (content === 'start game') {
+            this.reset.style.display = 'none'
+        } else if (this.game.victory || this.game.gameOver) {
+            this.continue.style.display = 'none';
+            this.subTitle.innerHTML = `your score : ${this.game.score}`;
+        }
 
         menuContent.innerHTML = content;
         overLayer.style.display = 'block';
