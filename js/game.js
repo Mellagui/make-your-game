@@ -93,13 +93,6 @@ export class Game {
 
             this.player.update(this.deltaTime);
 
-            // for (let i = 0; i <= this.ghosts.ghosts.length - 1; i++) {
-            //     const ghost = this.ghosts.ghosts[i];
-            //     console.log(ghost)
-            //     this.ghosts.update(this.deltaTime, ghost);
-            //     this.ghosts.checkCollisionWithPlayer(this.player.pixelX, this.player.pixelY, ghost);
-            // }
-
             this.ghosts.update(this.deltaTime);
 
             this.ghosts.checkCollisionWithPlayer();
