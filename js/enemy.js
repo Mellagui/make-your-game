@@ -70,10 +70,6 @@ export class Ghosts {
             if (ghost.ghostElement) {
                 ghost.ghostElement.remove();
             }
-            // // for svg ghost elements
-            // <i class='bx bx-ghost' ></i>
-            // ghost.ghostElement.classList.add('bx')
-            // ghost.ghostElement.classList.add('bx-ghost')
 
             ghost.ghostElement = document.createElement('div');
             ghost.ghostElement.id = ghost.name;
@@ -96,8 +92,8 @@ export class Ghosts {
     }
 
     update(deltaTime) {
-        this.ghostARR.forEach(val => {
-            const ghost = this.ghosts[val];
+        
+        for (const ghost of Object.values(this.ghosts)) {
 
             // if not moving update grid position
             if (!ghost.isMoving) {
@@ -111,15 +107,17 @@ export class Ghosts {
             if (ghost.isMoving) this.move(ghost, deltaTime);
 
             this.render(ghost);
-        });
+        };
     }
 
     playerTrack(ghost) {
+        // vertical
         if (this.game.player.gridX === ghost.gridX) {
             if (this.game.player.gridY > ghost.gridY) {
                 return 'down'
             }
             return 'up'
+        // horizontal
         } else if (this.game.player.gridY === ghost.gridY) {
             if (this.game.player.gridX > ghost.gridX) {
                 return 'right'
@@ -131,36 +129,30 @@ export class Ghosts {
     decideGhostMove(ghost) {
         let nextGridX = ghost.gridX, nextGridY = ghost.gridY;
 
-        if (ghost.direction === 'up') nextGridY--;
-        else if (ghost.direction === 'down') nextGridY++;
-        else if (ghost.direction === 'left') nextGridX--;
-        else if (ghost.direction === 'right') nextGridX++;
-
         // if next position is invalid, choose new direction
         if (this.game.gameBoard.map[ghost.gridY]?.[ghost.gridX] === 2) {
-            if (this.game.player.gridX === ghost.gridX || this.game.player.gridY === ghost.gridY) {
-                ghost.direction = this.playerTrack(ghost)
 
-                nextGridX = ghost.gridX, nextGridY = ghost.gridY;
+            // if player and ghost in the same line
+            if (this.game.player.gridX === ghost.gridX || this.game.player.gridY === ghost.gridY) {
+
+                ghost.direction = this.playerTrack(ghost);
 
                 if (ghost.direction === 'up') nextGridY--;
                 else if (ghost.direction === 'down') nextGridY++;
                 else if (ghost.direction === 'left') nextGridX--;
                 else if (ghost.direction === 'right') nextGridX++;
 
-                if (this.game.gameBoard.map[nextGridY]?.[nextGridX] === 1) {
-                    ghost.direction = this.randomValidDirection(ghost);
-                }
+                // if next position for ghosts equal wall, cancel player tracking
+                if (this.game.gameBoard.isWall(nextGridY, nextGridX)) ghost.direction = this.randomValidDirection(ghost);
+                nextGridX = ghost.gridX; nextGridY = ghost.gridY;
 
             } else ghost.direction = this.randomValidDirection(ghost);
-
-            nextGridX = ghost.gridX; nextGridY = ghost.gridY;
-
-            if (ghost.direction === 'up') nextGridY--;
-            else if (ghost.direction === 'down') nextGridY++;
-            else if (ghost.direction === 'left') nextGridX--;
-            else if (ghost.direction === 'right') nextGridX++;
         }
+
+        if (ghost.direction === 'up') nextGridY--;
+        else if (ghost.direction === 'down') nextGridY++;
+        else if (ghost.direction === 'left') nextGridX--;
+        else if (ghost.direction === 'right') nextGridX++;
 
         // set next position
         ghost.nextPixelX = this.game.gridToPixels(nextGridX);
@@ -177,10 +169,8 @@ export class Ghosts {
             else if (dir === 'left') nextGridX--;
             else if (dir === 'right') nextGridX++;
 
-            return this.game.gameBoard.map[nextGridY]?.[nextGridX] !== 1;
+            return !this.game.gameBoard.isWall(nextGridY, nextGridX);
         })
-
-        // if (validDirections.length > 1) validDirections.map(val => val != ghost.direction);
 
         return validDirections[Math.floor(Math.random() * validDirections.length)];
     }
@@ -202,39 +192,48 @@ export class Ghosts {
             // Move towards target
             ghost.pixelX += (dx / distance) * moveDistance;
             ghost.pixelY += (dy / distance) * moveDistance;
-            // console.log()
         }
     }
 
-    checkCollisionWithPlayer(playerX, playerY) {
-        const px = this.game.pixelsToGrid(playerX);
-        const py = this.game.pixelsToGrid(playerY);
+    checkCollisionWithPlayer() {
+        const player = {
+            width: this.game.player.width,
+            height: this.game.player.height,
+            x: this.game.player.pixelX,
+            y: this.game.player.pixelY
+        };
 
-        this.ghostARR.forEach(val => {
-            const ghost = this.ghosts[val];
-            const gx = this.game.pixelsToGrid(ghost.pixelX);
-            const gy = this.game.pixelsToGrid(ghost.pixelY);
+        for (const value of Object.values(this.ghosts)) {
 
-            if (px === gx && py === gy && this.game.lives > 0) {
+            if (this.checkCollision(value, player) && this.game.lives > 0) {
                 this.game.lives--;
                 this.game.ui.updateLives(this.game.lives);
                 this.game.inGame = false;
+                return
             }
-        });
+        };
+    }
+
+    checkCollision(ghost, player) {
+        return (
+            ghost.pixelX + 2 < player.x + player.width &&
+            ghost.pixelX - 2 + this.width > player.x &&
+            ghost.pixelY + 2 < player.y + player.height &&
+            ghost.pixelY - 2 + this.height > player.y
+        );
     }
 
     reset() {
-        this.ghostARR.forEach(val => {
-            const ghost = this.ghosts[val];
+        for (const [name, value] of Object.entries(this.ghosts)) {
 
-            ghost.gridX = val === 'red' || val === 'orange'? 4: 17;
-            ghost.gridY = val === 'red' || val === 'bleu'? 5: 15;
+            value.gridX = name === 'red' || name === 'orange'? 4: 17;
+            value.gridY = name === 'red' || name === 'bleu'? 5: 15;
 
-            ghost.pixelX = this.game.gridToPixels(ghost.gridX);
-            ghost.pixelY = this.game.gridToPixels(ghost.gridY);
+            value.pixelX = this.game.gridToPixels(value.gridX);
+            value.pixelY = this.game.gridToPixels(value.gridY);
 
-            ghost.direction = val === 'red' || val === 'orange'? 'right': 'left';
-            ghost.isMoving = false;
-        });
+            value.direction = name === 'red' || name === 'orange'? 'right': 'left';
+            value.isMoving = false;
+        };
     }
 }

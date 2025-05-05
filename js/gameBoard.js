@@ -107,9 +107,9 @@ export class GameBoard {
         return cell;
     }
     
-    isWall(x, y) {
+    isWall(y, x) {
         // check if wall surface.?
         if (!(x >= 0 && y >= 0 && x < this.cols && y < this.rows)) return true;
-        return this.grid[y][x] === 'wall';
+        return this.map[y][x] === 1;
     }
 }

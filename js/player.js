@@ -86,7 +86,7 @@ export class Player {
             this.gridY = this.game.pixelsToGrid(this.pixelY);
             
             // Check if we can change direction
-            if (this.game.gameBoard.map[this.gridY]?.[this.gridX] !== 1) this.tryChangeDirection();
+            if (!this.game.gameBoard.isWall(this.gridY, this.gridX)) this.tryChangeDirection();
 
             this.incresPlayerPosition();
         }
@@ -113,7 +113,7 @@ export class Player {
         else if (this.nextDirection === 'right') x++;
         
         // Check if the new direction is valid (not a wall)
-        if (this.game.gameBoard.map[y]?.[x] !== 1) return this.direction = this.nextDirection;
+        if (!this.game.gameBoard.isWall(y, x)) return this.direction = this.nextDirection;
     }
 
     incresPlayerPosition() {
@@ -129,7 +129,7 @@ export class Player {
         const nextGridX = this.game.pixelsToGrid(nextPixelX);
         const nextGridY = this.game.pixelsToGrid(nextPixelY);
 
-        if (this.game.gameBoard.map[nextGridY]?.[nextGridX] !== 1) {
+        if (!this.game.gameBoard.isWall(nextGridY, nextGridX)) {
             this.nextPixelX = nextPixelX;
             this.nextPixelY = nextPixelY;
             this.isMoving = true;
@@ -157,7 +157,7 @@ export class Player {
     }
 
     checkDotCollection() {
-        if (this.game.gameBoard.map[this.gridY]?.[this.gridX] !== 1) {
+        if (!this.game.gameBoard.isWall(this.gridY, this.gridX)) {
             const pacmanCell = document.getElementById(`${this.gridX}-${this.gridY}`);
 
             if (pacmanCell?.dataset.hasDot === 'true') {
