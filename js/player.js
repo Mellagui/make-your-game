@@ -5,35 +5,25 @@ export class Player {
         this.game = game;
         this.width = 20;
         this.height = 20;
+
         this.pacmanElement = null;
-
         this.animator = null;
-        this.arrowMap = {'up': 270, 'down': 90, 'left': 180, 'right': 0};
-        this.animations = {
-            'pm-frames': {
-                path: 'assets/character/pacman-frames.png',
-                frameCount: 6
-            }
-        }
 
-        // Movement properties
-        this.nextDirection = '';
+        this.rotateMap = {'up': 270, 'down': 90, 'left': 180, 'right': 0};
+
+        this.name = 'pacman';
         this.direction = '';
-        this.name = 'pacMan';
+        this.nextDirection = '';
 
-        // Grid Position
         this.gridX = 10;
         this.gridY = 5;
 
-        // Position in pixels
         this.pixelX = this.game.gridToPixels(this.gridX);
         this.pixelY = this.game.gridToPixels(this.gridY);
 
-        // Next position in pixels
         this.nextPixelX = this.pixelX;
         this.nextPixelY = this.pixelY;
 
-        // is player currently moving between cells
         this.isMoving = false;
 
         this.createPlayerElement();
@@ -51,8 +41,8 @@ export class Player {
         this.game.gameBoard.board.appendChild(this.pacmanElement);
 
         // Init player animator
-        this.animator = new ElementAnimator(this.pacmanElement, this.animations);
-        this.animator.setAnimation('pm-frames');
+        this.animator = new ElementAnimator(this.pacmanElement);
+        this.animator.setAnimation();
 
         this.render();
     }
@@ -61,10 +51,11 @@ export class Player {
         if (this.pacmanElement) {
             this.pacmanElement.style.left = `${this.pixelX}px`;
             this.pacmanElement.style.top = `${this.pixelY}px`;
+            // this.pacmanElement.style.transform = `translate(${this.pixelX}px, ${this.pixelY}px)`;
 
             // Rotate based on direction
-            const arrow = this.arrowMap[this.direction] ?? 0;
-            this.pacmanElement.style.transform = `rotate(${arrow}deg)`;
+            const deg = this.rotateMap[this.direction] ?? 0;
+            this.pacmanElement.style.transform = `rotate(${deg}deg)`;
         }
     }
 
@@ -85,8 +76,8 @@ export class Player {
             this.gridX = this.game.pixelsToGrid(this.pixelX);
             this.gridY = this.game.pixelsToGrid(this.pixelY);
             
-            // Check if we can change direction
-            if (!this.game.gameBoard.isWall(this.gridY, this.gridX)) this.tryChangeDirection();
+            // Check if we can change direction 
+            if (this.nextDirection !== '') this.tryChangeDirection();
 
             this.incresPlayerPosition();
         }
@@ -102,8 +93,6 @@ export class Player {
     }
 
     tryChangeDirection() {
-        if (this.nextDirection === '') return
-
         let x = this.gridX;
         let y = this.gridY;
         
@@ -113,25 +102,21 @@ export class Player {
         else if (this.nextDirection === 'right') x++;
         
         // Check if the new direction is valid (not a wall)
-        if (!this.game.gameBoard.isWall(y, x)) return this.direction = this.nextDirection;
+        if (!this.game.gameBoard.isWall(x, y)) return this.direction = this.nextDirection;
     }
 
     incresPlayerPosition() {
-        let nextPixelX = this.pixelX;
-        let nextPixelY = this.pixelY;
+        let nextGridX = this.gridX;
+        let nextGridY = this.gridY;
+        
+        if (this.direction === 'up') nextGridY--;
+        else if (this.direction === 'down') nextGridY++;
+        else if (this.direction === 'left') nextGridX--;
+        else if (this.direction === 'right') nextGridX++;
 
-        if (this.direction === 'up') nextPixelY -= 20;
-        else if (this.direction === 'down') nextPixelY += 20;
-        else if (this.direction === 'left') nextPixelX -= 20;
-        else if (this.direction === 'right') nextPixelX += 20;
-
-        // Convert nextPixels to nextGrid coordinates for collision check
-        const nextGridX = this.game.pixelsToGrid(nextPixelX);
-        const nextGridY = this.game.pixelsToGrid(nextPixelY);
-
-        if (!this.game.gameBoard.isWall(nextGridY, nextGridX)) {
-            this.nextPixelX = nextPixelX;
-            this.nextPixelY = nextPixelY;
+        if (!this.game.gameBoard.isWall(nextGridX, nextGridY)) {
+            this.nextPixelX = this.game.gridToPixels(nextGridX);
+            this.nextPixelY = this.game.gridToPixels(nextGridY);
             this.isMoving = true;
         }
     }
@@ -157,15 +142,13 @@ export class Player {
     }
 
     checkDotCollection() {
-        if (!this.game.gameBoard.isWall(this.gridY, this.gridX)) {
-            const pacmanCell = document.getElementById(`${this.gridX}-${this.gridY}`);
+        const pacmanCell = document.getElementById(`${this.gridX}-${this.gridY}`);
 
-            if (pacmanCell?.dataset.hasDot === 'true') {
-                pacmanCell.classList.remove('dot');
-                pacmanCell.dataset.hasDot = 'false';
-                this.game.score += 10;
-                this.game.ui.updateScore(this.game.score);
-            }
+        if (pacmanCell?.dataset.hasDot === 'true') {
+            pacmanCell.classList.remove('dot');
+            pacmanCell.dataset.hasDot = 'false';
+            this.game.score += 10;
+            this.game.ui.updateScore(this.game.score);
         }
     }
 }

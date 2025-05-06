@@ -15,15 +15,14 @@ export class Game {
         this.gameOver = false;
         this.pause = false;
 
-        // game metrics
         this.score = 0;
         this.lives = 5;
-        this.timeRemaining = 180; // 3 minutes
+        this.timeRemaining = 120;
  
         // movement settings (pixels per second)
         this.pacmanSpeed = 100;  // 120px per second = 6 cells per second (20px cells) // 6 cells per second (120/20)
         this.ghostSpeed = 80;    // 80px per second = 4 cells per second // 4 cells per second (80/20)
-        this.cellSize = 20;      // Size of each cell in pixels
+        this.cellSize = 20;
 
         // game objects
         this.ui = new UI(this);
@@ -39,7 +38,7 @@ export class Game {
         this.currentMenu = false;
 
         // In Game constructor
-        this.gameLoop = this.gameLoop.bind(this);
+        this.gameLoop = this.gameLoop.bind(this);//
     }
 
     init() {
@@ -56,14 +55,12 @@ export class Game {
         this.ui.updateLives(this.lives);
         this.ui.updateTimer(this.timeRemaining);
         this.ui.showMenu('start game');
-        
-        // Start the game loop
+
         this.startGameLoop();
-        
+
         console.log('Game initialized successfully');
     }
 
-    // Start the game loop
     startGameLoop() {
         this.lastTime = performance.now();
         this.animationFrameId = requestAnimationFrame(this.gameLoop);
@@ -71,12 +68,10 @@ export class Game {
 
     // Cancel previous loop
     cancelGameLoop() {
-        // this.animationFrameId = null;
         cancelAnimationFrame(this.animationFrameId);
     }
 
     gameLoop(timestamp) {
-        // console.log(this.animationFrameId)
         if (!this.lastTime) this.lastTime = timestamp;
 
         // Calculate delta time (in seconds for easier calculations)
@@ -87,6 +82,7 @@ export class Game {
         if (this.deltaTime > 0.1) this.deltaTime = 0.1;
 
         if (this.inGame && !this.gameOver && !this.victory && !this.pause) {
+
             // Update timer
             this.timeRemaining -= this.deltaTime;
             this.ui.updateTimer(Math.ceil(this.timeRemaining));
@@ -104,21 +100,24 @@ export class Game {
             if (this.score >= this.maxScore /* 100 */) {
                 this.victory = true;
                 this.ui.showMenu('win');
-                console.log('you win')
+
+                console.log('victory');
                 return
             } else if (this.timeRemaining <= 0 || this.lives === 0) {
                 this.gameOver = true;
                 this.ui.showMenu('game over');
-                console.log('you lose')
+
+                console.log('defeat');
                 return
             }
 
             if (this.pause) {
                 this.ui.showMenu('game pause');
-                console.log('pause')
+                console.log('pause');
+
             } else if (!this.inGame) {
                 this.ui.showMenu('continue');
-                console.log('life -1')
+                console.log('life -1');
             }
         }
 
@@ -126,14 +125,19 @@ export class Game {
         this.animationFrameId = requestAnimationFrame(this.gameLoop);
     }
 
+    ToggelePause() {
+        if (this.pause) this.ui.hideMenu();
+        this.pause = this.pause? false: true;
+    }
+
     resetPosition() {
         this.player.reset();
         this.ghosts.reset();
     }
-    
+
     resetGame() {
         this.cancelGameLoop();
-        
+
         this.victory = false;
         this.gameOver = false;
         this.pause = false;
@@ -141,11 +145,11 @@ export class Game {
         this.score = 0;
         this.lives = 5;
         this.timeRemaining = 180;
-        
+
         console.log('game restarted')
         this.init();
     }
-    
+
     pixelsToGrid(pixels) {
         return Math.round(pixels / this.cellSize);
     }

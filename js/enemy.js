@@ -3,12 +3,11 @@ export class Ghosts {
         this.game = game;
         this.width = 20;
         this.height = 20;
-        this.ghostARR = ['red', 'bleu', 'orange', 'pink'];
+
         this.directions = ['up', 'down', 'left', 'right'];
         this.ghosts = {
             red: {
                 ghostElement: null,
-                name: 'redGhost',
                 path: 'assets/enemy/r-ghost.png',
                 gridX: 4,
                 gridY: 5,
@@ -21,7 +20,6 @@ export class Ghosts {
             },
             bleu: {
                 ghostElement: null,
-                name: 'bleuGhost',
                 path: 'assets/enemy/b-ghost.png',
                 gridX: 17,
                 gridY: 5,
@@ -34,7 +32,6 @@ export class Ghosts {
             },
             orange: {
                 ghostElement: null,
-                name: 'orangeGhost',
                 path: 'assets/enemy/o-ghost.png',
                 gridX: 4,
                 gridY: 15,
@@ -47,7 +44,6 @@ export class Ghosts {
             },
             pink: {
                 ghostElement: null,
-                name: 'pinkGhost',
                 path: 'assets/enemy/p-ghost.png',
                 gridX: 17,
                 gridY: 15,
@@ -64,16 +60,13 @@ export class Ghosts {
     }
 
     createGhostElement() {
-        this.ghostARR.forEach(val => {
-            const ghost = this.ghosts[val];
+        for (const [name, ghost] of Object.entries(this.ghosts)) {
             
-            if (ghost.ghostElement) {
-                ghost.ghostElement.remove();
-            }
+            if (ghost.ghostElement) ghost.ghostElement.remove();
 
             ghost.ghostElement = document.createElement('div');
-            ghost.ghostElement.id = ghost.name;
-            ghost.ghostElement.className = ghost.name;
+            ghost.ghostElement.id = name;
+            ghost.ghostElement.className = name;
             ghost.ghostElement.style.width = `${this.width}px`;
             ghost.ghostElement.style.height = `${this.height}px`;
             
@@ -84,17 +77,15 @@ export class Ghosts {
             this.game.gameBoard.board.appendChild(ghost.ghostElement);
 
             this.render(ghost);
-        });
+        };
     }
-    
+
     render(ghost) {
         if (ghost.ghostElement) ghost.ghostElement.style.transform = `translate(${ghost.pixelX}px, ${ghost.pixelY}px)`;
     }
 
     update(deltaTime) {
-        
         for (const ghost of Object.values(this.ghosts)) {
-
             // if not moving update grid position
             if (!ghost.isMoving) {
                 ghost.gridX = this.game.pixelsToGrid(ghost.pixelX);
@@ -129,7 +120,7 @@ export class Ghosts {
     decideGhostMove(ghost) {
         let nextGridX = ghost.gridX, nextGridY = ghost.gridY;
 
-        // if next position is invalid, choose new direction
+        // if position in map = 2
         if (this.game.gameBoard.map[ghost.gridY]?.[ghost.gridX] === 2) {
 
             // if player and ghost in the same line
@@ -143,7 +134,8 @@ export class Ghosts {
                 else if (ghost.direction === 'right') nextGridX++;
 
                 // if next position for ghosts equal wall, cancel player tracking
-                if (this.game.gameBoard.isWall(nextGridY, nextGridX)) ghost.direction = this.randomValidDirection(ghost);
+                if (this.game.gameBoard.isWall(nextGridX, nextGridY)) ghost.direction = this.randomValidDirection(ghost);
+
                 nextGridX = ghost.gridX; nextGridY = ghost.gridY;
 
             } else ghost.direction = this.randomValidDirection(ghost);
@@ -154,7 +146,6 @@ export class Ghosts {
         else if (ghost.direction === 'left') nextGridX--;
         else if (ghost.direction === 'right') nextGridX++;
 
-        // set next position
         ghost.nextPixelX = this.game.gridToPixels(nextGridX);
         ghost.nextPixelY = this.game.gridToPixels(nextGridY);
         ghost.isMoving = true;
@@ -169,7 +160,7 @@ export class Ghosts {
             else if (dir === 'left') nextGridX--;
             else if (dir === 'right') nextGridX++;
 
-            return !this.game.gameBoard.isWall(nextGridY, nextGridX);
+            return !this.game.gameBoard.isWall(nextGridX, nextGridY);
         })
 
         return validDirections[Math.floor(Math.random() * validDirections.length)];
@@ -216,10 +207,10 @@ export class Ghosts {
 
     checkCollision(ghost, player) {
         return (
-            ghost.pixelX + 2 < player.x + player.width &&
-            ghost.pixelX - 2 + this.width > player.x &&
-            ghost.pixelY + 2 < player.y + player.height &&
-            ghost.pixelY - 2 + this.height > player.y
+            ghost.pixelX + 4 < player.x + player.width &&
+            ghost.pixelX - 4 + this.width > player.x &&
+            ghost.pixelY + 4 < player.y + player.height &&
+            ghost.pixelY - 4 + this.height > player.y
         );
     }
 

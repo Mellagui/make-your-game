@@ -12,13 +12,12 @@ export class UI {
         this.subTitle = document.getElementById('sub-title');
 
         // button
-        this.continue = document.getElementById('continue');
-        this.reset = document.getElementById('reset');
+        this.continueBtn = document.getElementById('continue');
+        this.resetBtn = document.getElementById('reset');
     }
 
     updateScore(score) {
-        const content = score < 10? '0000': score < 100? '00' + score: score < 1000? '0' + score: score;
-        this.scoreElement.textContent = content;
+        this.scoreElement.textContent = score < 10? '0000': score < 100? '00' + score: score < 1000? '0' + score: score;
     }
 
     updateLives(lives) {
@@ -27,21 +26,21 @@ export class UI {
     }
 
     updateTimer(time) {
-        this.timerElement.textContent = Math.max(0, Math.floor(time));
+        this.timerElement.textContent = time;
     }
 
     showMenu(content) {
         this.game.player.animator.stop(); // stop when idle
         this.game.currentMenu = true;
         
-        this.continue.style.display = 'block';
-        this.reset.style.display = 'block';
+        this.continueBtn.style.display = 'block';
+        this.resetBtn.style.display = 'block';
         this.subTitle.innerHTML = '';
 
         if (content === 'start game') {
-            this.reset.style.display = 'none'
+            this.resetBtn.style.display = 'none'
         } else if (this.game.victory || this.game.gameOver) {
-            this.continue.style.display = 'none';
+            this.continueBtn.style.display = 'none';
             this.subTitle.innerHTML = `your score : ${this.game.score}`;
         }
 
