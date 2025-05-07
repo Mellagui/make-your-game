@@ -8,7 +8,7 @@ export class UI {
         // End-Event Animations
         this.overLayer = document.getElementById('overLayer');
         this.popUp = document.getElementById('popUp');
-        this.menuContent = document.getElementById('menuContent');
+        this.menuTitle = document.getElementById('menu-title');
         this.subTitle = document.getElementById('sub-title');
 
         // button
@@ -44,16 +44,16 @@ export class UI {
             this.subTitle.innerHTML = `your score : ${this.game.score}`;
         }
 
-        menuContent.innerHTML = content;
-        overLayer.style.display = 'block';
-        popUp.style.display = 'block';
+        this.menuTitle.innerHTML = content;
+        this.overLayer.style.display = 'block';
+        this.popUp.style.display = 'block';
     }
     
     hideMenu() {
         this.game.currentMenu = false;
         
-        menuContent.innerHTML = '';
-        overLayer.style.display = 'none';
-        popUp.style.display = 'none';
+        this.menuTitle.innerHTML = '';
+        this.overLayer.style.display = 'none';
+        this.popUp.style.display = 'none';
     }
 }

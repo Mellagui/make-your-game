@@ -10,54 +10,42 @@
 
     <body>
         <div class="game-container">
-            <div id="overLayer"></div>
-                <div id="popUp">
-                    <!-- menu title -->
-                    <h2 id="menuContent"></h2>
-                    <!-- menu sub-title -->
-                    <h5 id="sub-title"></h5>
-                    
-                    <!-- contunie -->
-                    <button type="button" class='btn' id="continue"><!--<i class='bx bx-play'></i>-->play</button> 
-                    <!-- reset -->
-                    <button type="button" class='btn' id="reset"><!--<i class='bx bx-reset'></i>-->reset</button>
+            <div class="subject">
+                <div class="subject-header">
+                    <div class="title-game"><img src="assets/pm-header.png"></div>
+    
+                    <div class="handle-score">
+                        <div class="score">score: <span id="score"></span></div> <!-- score -->
+                        <div class="time">time: <span id="timer"></span></div> <!-- timer -->
+                    </div>
                 </div>
-
-                <div class="subject">
-                    <div class="subject-header">
-                        <div class="title-game">
-                            <img src="assets/pm-header.png">
+                
+                <div class="subject-body">
+                    <div class="game-board" id="game-board"></div>
+                </div>
+    
+                <div class="subject-footer">
+                    <div class="handle-score">
+                        <div class="lives"> <!-- lives -->
+                            <i class='bx bxs-game' ></i>
+                            <i class='bx bxs-game' ></i>
+                            <i class='bx bxs-game' ></i>
+                            <i class='bx bxs-game' ></i>
+                            <i class='bx bxs-game' ></i>
                         </div>
-        
-                        <div class="handle-score">
-                            <!-- score -->
-                            <div class="score">score: <span id="score"></span></div>
-                            <!-- timer -->
-                            <div class="time">time: <span id="timer"></span></div>
-                        </div>
-                    </div>
-                    
-                    <div class="subject-body">
-                        <!-- game-board -->
-                        <div class="game-board" id="game-board"></div>
-                    </div>
-        
-                    <div class="subject-footer">
-                        <div class="handle-score">                
-                            <!-- lives -->
-                            <div class="lives">
-                                <i class='bx bxs-game' ></i>
-                                <i class='bx bxs-game' ></i>
-                                <i class='bx bxs-game' ></i>
-                                <i class='bx bxs-game' ></i>
-                                <i class='bx bxs-game' ></i>
-                            </div>
-                            <!-- fruit score -->
-                            <!-- <div class="fruit"></div> -->
-                        </div>
+                        <!-- <div class="fruit"></div> --><!-- fruit score -->
                     </div>
                 </div>
             </div>
+
+            <div id="overLayer"></div>
+            <div id="popUp">
+                <h2 id="menu-title"></h2>
+                <h5 id="sub-title"></h5>
+                <button type="button" class='btn' id="continue"><!--<i class='bx bx-play'></i>-->play</button> <!-- contunie button -->
+                <button type="button" class='btn' id="reset"><!--<i class='bx bx-reset'></i>-->reset</button> <!-- reset button -->
+            </div>
+        </div>
 
         <script type="module" src="js/main.js"></script>
     </body>

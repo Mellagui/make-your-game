@@ -8,7 +8,6 @@ export class Player {
 
         this.pacmanElement = null;
         this.animator = null;
-
         this.rotateMap = {'up': 270, 'down': 90, 'left': 180, 'right': 0};
 
         this.name = 'pacman';
@@ -33,10 +32,10 @@ export class Player {
         if (this.pacmanElement) this.pacmanElement.remove(); // remove any existing player element
 
         this.pacmanElement = document.createElement('div');
+        this.pacmanElement.id = this.name;
         this.pacmanElement.className = this.name;
         this.pacmanElement.style.width = `${this.width}px`;
         this.pacmanElement.style.height = `${this.height}px`;
-        this.pacmanElement.id = this.name;
 
         this.game.gameBoard.board.appendChild(this.pacmanElement);
 
@@ -51,11 +50,10 @@ export class Player {
         if (this.pacmanElement) {
             this.pacmanElement.style.left = `${this.pixelX}px`;
             this.pacmanElement.style.top = `${this.pixelY}px`;
-            // this.pacmanElement.style.transform = `translate(${this.pixelX}px, ${this.pixelY}px)`;
 
             // Rotate based on direction
             const deg = this.rotateMap[this.direction] ?? 0;
-            this.pacmanElement.style.transform = `rotate(${deg}deg)`;
+            this.pacmanElement.style.transform = `translate3d(0, 0, 0) rotate(${deg}deg)`;
         }
     }
 
@@ -93,21 +91,19 @@ export class Player {
     }
 
     tryChangeDirection() {
-        let x = this.gridX;
-        let y = this.gridY;
+        let nextGridX = this.gridX, nextGridY = this.gridY;
+
+        if (this.nextDirection === 'up') nextGridY--;
+        else if (this.nextDirection === 'down') nextGridY++;
+        else if (this.nextDirection === 'left') nextGridX--;
+        else if (this.nextDirection === 'right') nextGridX++;
         
-        if (this.nextDirection === 'up') y--;
-        else if (this.nextDirection === 'down') y++;
-        else if (this.nextDirection === 'left') x--;
-        else if (this.nextDirection === 'right') x++;
-        
-        // Check if the new direction is valid (not a wall)
-        if (!this.game.gameBoard.isWall(x, y)) return this.direction = this.nextDirection;
+        // Check if the new direction redirect to valid position
+        if (!this.game.gameBoard.isWall(nextGridX, nextGridY)) return this.direction = this.nextDirection;
     }
 
     incresPlayerPosition() {
-        let nextGridX = this.gridX;
-        let nextGridY = this.gridY;
+        let nextGridX = this.gridX, nextGridY = this.gridY;
         
         if (this.direction === 'up') nextGridY--;
         else if (this.direction === 'down') nextGridY++;

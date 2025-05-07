@@ -17,7 +17,7 @@ export class ElementAnimator {
     setAnimation() {
         this.element.style.backgroundImage = `url('${this.animations.path}')`;
         this.element.style.backgroundSize = `${this.animations.frameWidth * this.animations.totalFrames}px 20px`;
-        this.element.style.backgroundRepeat = 'no-repeat';
+        // this.element.style.backgroundRepeat = 'no-repeat';
     }
 
     start() {

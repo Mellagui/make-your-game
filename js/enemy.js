@@ -81,11 +81,15 @@ export class Ghosts {
     }
 
     render(ghost) {
-        if (ghost.ghostElement) ghost.ghostElement.style.transform = `translate(${ghost.pixelX}px, ${ghost.pixelY}px)`;
+        if (ghost.ghostElement) {
+           ghost.ghostElement.style.left = `${ghost.pixelX}px`;
+           ghost.ghostElement.style.top = `${ghost.pixelY}px`;  
+        }
     }
 
     update(deltaTime) {
         for (const ghost of Object.values(this.ghosts)) {
+
             // if not moving update grid position
             if (!ghost.isMoving) {
                 ghost.gridX = this.game.pixelsToGrid(ghost.pixelX);
@@ -104,23 +108,20 @@ export class Ghosts {
     playerTrack(ghost) {
         // vertical
         if (this.game.player.gridX === ghost.gridX) {
-            if (this.game.player.gridY > ghost.gridY) {
-                return 'down'
-            }
-            return 'up'
+            if (this.game.player.gridY > ghost.gridY) return 'down';
+            return 'up';
+
         // horizontal
         } else if (this.game.player.gridY === ghost.gridY) {
-            if (this.game.player.gridX > ghost.gridX) {
-                return 'right'
-            }
-            return 'left'
+            if (this.game.player.gridX > ghost.gridX) return 'right';
+            return 'left';
         }
     }
 
     decideGhostMove(ghost) {
         let nextGridX = ghost.gridX, nextGridY = ghost.gridY;
 
-        // if position in map = 2
+        // if position in map === 2
         if (this.game.gameBoard.map[ghost.gridY]?.[ghost.gridX] === 2) {
 
             // if player and ghost in the same line

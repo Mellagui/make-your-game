@@ -18,13 +18,11 @@ export class Game {
         this.score = 0;
         this.lives = 5;
         this.timeRemaining = 120;
- 
-        // movement settings (pixels per second)
-        this.pacmanSpeed = 100;  // 120px per second = 6 cells per second (20px cells) // 6 cells per second (120/20)
-        this.ghostSpeed = 80;    // 80px per second = 4 cells per second // 4 cells per second (80/20)
+
+        this.pacmanSpeed = 100;  // 5 cells per second (100/20)
+        this.ghostSpeed = 80;    // 4 cells per second (80/20)
         this.cellSize = 20;
 
-        // game objects
         this.ui = new UI(this);
         this.gameBoard = new GameBoard(this);
         this.input = new InputHandler(this);
@@ -46,7 +44,7 @@ export class Game {
 
         this.gameBoard.createBoard();
 
-        // this.setSpeeds(120, 100);
+        // this.setSpeeds(100, 80);
 
         this.player = new Player(this);
         this.ghosts = new Ghosts(this);
@@ -66,7 +64,6 @@ export class Game {
         this.animationFrameId = requestAnimationFrame(this.gameLoop);
     }
 
-    // Cancel previous loop
     cancelGameLoop() {
         cancelAnimationFrame(this.animationFrameId);
     }
