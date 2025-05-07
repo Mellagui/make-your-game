@@ -1,9 +1,6 @@
 export class UI {
     constructor(game) {
         this.game = game;
-        this.scoreElement = document.getElementById('score');
-        this.timerElement = document.getElementById('timer');
-        this.livesElement = document.querySelectorAll('.bxs-game');
 
         // End-Event Animations
         this.overLayer = document.getElementById('overLayer');
@@ -17,16 +14,16 @@ export class UI {
     }
 
     updateScore(score) {
-        this.scoreElement.textContent = score < 10? '0000': score < 100? '00' + score: score < 1000? '0' + score: score;
+        document.getElementById('score').textContent = score < 10? '0000': score < 100? '00' + score: score < 1000? '0' + score: score;
     }
 
     updateLives(lives) {
-        if (lives === 5) return this.livesElement.forEach(live => live.style.color = '#FFEE58');
-        this.livesElement[lives].style.color = '#111';
+        if (lives === 5) return document.querySelectorAll('.bxs-game').forEach(live => live.style.color = '#FFEE58');
+        document.querySelectorAll('.bxs-game')[lives].style.color = '#111';
     }
 
     updateTimer(time) {
-        this.timerElement.textContent = time;
+        document.getElementById('timer').textContent = time;
     }
 
     showMenu(content) {
