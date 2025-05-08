@@ -212,6 +212,7 @@ export class Ghosts {
 
     checkCollision(ghost, player) {
         return (
+            // technique classical: "Axis-Aligned Bounding Box" (AABB) collision detection
             ghost.pixelX + 4 < player.x + player.width &&
             ghost.pixelX - 4 + this.width > player.x &&
             ghost.pixelY + 4 < player.y + player.height &&

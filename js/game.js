@@ -62,7 +62,7 @@ export class Game {
 
     startGameLoop() {
         this.lastTime = performance.now();
-        this.animationFrameId = requestAnimationFrame(this.gameLoop);
+        this.animationFrameId = requestAnimationFrame((timestamp) => this.gameLoop(timestamp)); //
     }
 
     cancelGameLoop() {
@@ -72,8 +72,8 @@ export class Game {
     gameLoop(timestamp) {
         if (!this.lastTime) this.lastTime = timestamp;
 
-        // Calculate delta time (in seconds for easier calculations)
-        this.deltaTime = (timestamp - this.lastTime) / 1000; // Convert to seconds
+        // Calculate delta time (time between frames)
+        this.deltaTime = (timestamp - this.lastTime) / 1000;
         this.lastTime = timestamp;
 
         // Limit delta time to prevent large jumps
@@ -81,9 +81,11 @@ export class Game {
 
         if (this.inGame && !this.gameOver && !this.victory && !this.pause) {
 
-            // Update timer
             this.timeRemaining -= this.deltaTime;
-            this.ui.updateTimer(Math.ceil(this.timeRemaining));
+            if (this.displayedTime != Math.ceil(this.timeRemaining)) {
+                this.displayedTime = Math.ceil(this.timeRemaining);
+                this.ui.updateTimer(this.displayedTime);
+            };
 
             this.player.update(this.deltaTime);
 
@@ -95,7 +97,7 @@ export class Game {
         if (!this.currentMenu) this.checkGameState();
 
         // Continue the game loop
-        this.animationFrameId = requestAnimationFrame(this.gameLoop);
+        this.animationFrameId = requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
     }
 
     checkGameState() {
@@ -142,7 +144,7 @@ export class Game {
         this.inGame = false;
         this.score = 0;
         this.lives = 5;
-        this.timeRemaining = 180;
+        this.timeRemaining = 120;
 
         console.log('game restarted')
         this.init();

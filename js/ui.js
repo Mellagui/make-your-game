@@ -17,7 +17,7 @@ export class UI {
     }
 
     updateScore(score) {
-        if (this.scoreElement.textContent != score) this.scoreElement.textContent = score < 10? '0000': score < 100? '00' + score: score < 1000? '0' + score: score;
+        this.scoreElement.textContent = score < 10? '0000': score < 100? '00' + score: score < 1000? '0' + score: score;
     }
 
     updateLives(lives) {

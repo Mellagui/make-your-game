@@ -121,7 +121,8 @@ export class Player {
     }
 
     move(deltaTime) {
-        const moveDistance = this.game.pacmanSpeed * deltaTime;
+        // distance per frame
+        const moveDistance = this.game.pacmanSpeed * deltaTime; // 100 * 0.016 = 1.6 px per frame
 
         // Calculate direction vector
         const dx = this.nextPixelX - this.pixelX;
