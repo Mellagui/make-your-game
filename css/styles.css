@@ -126,6 +126,8 @@ body {
     transition: left 0.15s ease-out, top 0.15s ease-out;
     z-index: 100;
     border-radius: 50%;
+}
+.pacman {
     transform: translate3d(0, 0, 0);
 }
 

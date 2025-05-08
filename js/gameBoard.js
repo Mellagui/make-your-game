@@ -5,6 +5,7 @@ export class GameBoard {
         this.rows = 21;
         this.cols = 21;
         this.cellSize = 20;
+        this.cellMap = {};
         this.map = [[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], // 21 * 21
                     [1,2,0,0,0,2,0,0,0,2,1,2,0,0,0,2,0,0,0,2,1],
                     [1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,0,1],
@@ -47,6 +48,9 @@ export class GameBoard {
                     cell.dataset.hasDot = 'true';
                 }
                 this.board.appendChild(cell);
+
+                const id = `${x}-${y}`;
+                this.cellMap[id] = document.getElementById(id);
             }
         }
         this.game.maxScore = document.querySelectorAll('.dot').length * 10;

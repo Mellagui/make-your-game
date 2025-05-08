@@ -18,6 +18,7 @@ export class Game {
         this.score = 0;
         this.lives = 5;
         this.timeRemaining = 120;
+        this.displayedTime = null;
 
         this.pacmanSpeed = 100;  // 5 cells per second (100/20)
         this.ghostSpeed = 80;    // 4 cells per second (80/20)
@@ -36,7 +37,7 @@ export class Game {
         this.currentMenu = false;
 
         // In Game constructor
-        this.gameLoop = this.gameLoop.bind(this);//
+        this.gameLoop = this.gameLoop.bind(this);
     }
 
     init() {
@@ -89,37 +90,37 @@ export class Game {
             this.ghosts.update(this.deltaTime);
 
             this.ghosts.checkCollisionWithPlayer();
-
-            this.player.checkDotCollection();
         }
 
-        if (!this.currentMenu) {
-            if (this.score >= this.maxScore /* 100 */) {
-                this.victory = true;
-                this.ui.showMenu('win');
-
-                console.log('victory');
-                return
-            } else if (this.timeRemaining <= 0 || this.lives === 0) {
-                this.gameOver = true;
-                this.ui.showMenu('game over');
-
-                console.log('defeat');
-                return
-            }
-
-            if (this.pause) {
-                this.ui.showMenu('game pause');
-                console.log('pause');
-
-            } else if (!this.inGame) {
-                this.ui.showMenu('continue');
-                console.log('life -1');
-            }
-        }
+        if (!this.currentMenu) this.checkGameState();
 
         // Continue the game loop
         this.animationFrameId = requestAnimationFrame(this.gameLoop);
+    }
+
+    checkGameState() {
+        if (this.score >= this.maxScore /* 100 */) {
+            this.victory = true;
+            this.ui.showMenu('win');
+
+            console.log('victory');
+            return
+        } else if (this.timeRemaining <= 0 || this.lives === 0) {
+            this.gameOver = true;
+            this.ui.showMenu('game over');
+
+            console.log('defeat');
+            return
+        }
+
+        if (this.pause) {
+            this.ui.showMenu('game pause');
+            console.log('pause');
+
+        } else if (!this.inGame) {
+            this.ui.showMenu('continue');
+            console.log('life -1');
+        }
     }
 
     ToggelePause() {

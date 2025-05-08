@@ -48,8 +48,9 @@ export class Player {
     
     render() {
         if (this.pacmanElement) {
-            this.pacmanElement.style.left = `${this.pixelX}px`;
-            this.pacmanElement.style.top = `${this.pixelY}px`;
+
+            if (this.pacmanElement.style.left !== `${this.pixelX}px`) this.pacmanElement.style.left = `${this.pixelX}px`;
+            if (this.pacmanElement.style.top !== `${this.pixelY}px`) this.pacmanElement.style.top = `${this.pixelY}px`;
 
             // Rotate based on direction
             const deg = this.rotateMap[this.direction] ?? 0;
@@ -78,6 +79,8 @@ export class Player {
             if (this.nextDirection !== '') this.tryChangeDirection();
 
             this.incresPlayerPosition();
+
+            this.checkDotCollection();
         }
 
         if (this.isMoving) {
@@ -127,8 +130,8 @@ export class Player {
 
         // If we're very close to target, snap to it
         if (distance < moveDistance) {
-            this.pixelX = this.nextPixelX;
-            this.pixelY = this.nextPixelY;
+            this.pixelX = Math.round(this.nextPixelX);
+            this.pixelY = Math.round(this.nextPixelY);
             this.isMoving = false;
         } else {
             // Move towards target
@@ -138,7 +141,7 @@ export class Player {
     }
 
     checkDotCollection() {
-        const pacmanCell = document.getElementById(`${this.gridX}-${this.gridY}`);
+        const pacmanCell = this.game.gameBoard.cellMap[`${this.gridX}-${this.gridY}`];
 
         if (pacmanCell?.dataset.hasDot === 'true') {
             pacmanCell.classList.remove('dot');

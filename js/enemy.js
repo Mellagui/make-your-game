@@ -55,6 +55,12 @@ export class Ghosts {
                 isMoving: false,
             }
         };
+        this.initialStates = {
+            red: { gridX: 4, gridY: 5, direction: 'right' },
+            bleu: { gridX: 17, gridY: 5, direction: 'left' },
+            orange: { gridX: 4, gridY: 15, direction: 'right' },
+            pink: { gridX: 17, gridY: 15, direction: 'left' }
+        };
 
         this.createGhostElement();
     }
@@ -177,8 +183,8 @@ export class Ghosts {
         
         // If we're very close to target, snap to it
         if (distance < moveDistance) {
-            ghost.pixelX = ghost.nextPixelX;
-            ghost.pixelY = ghost.nextPixelY;
+            ghost.pixelX = Math.round(ghost.nextPixelX);
+            ghost.pixelY = Math.round(ghost.nextPixelY);
             ghost.isMoving = false;
         } else {
             // Move towards target
@@ -188,22 +194,20 @@ export class Ghosts {
     }
 
     checkCollisionWithPlayer() {
-        const player = {
-            width: this.game.player.width,
-            height: this.game.player.height,
-            x: this.game.player.pixelX,
-            y: this.game.player.pixelY
-        };
+        for (const ghost of Object.values(this.ghosts)) {
+            const player = {
+                width: this.game.player.width,
+                height: this.game.player.height,
+                x: this.game.player.pixelX,
+                y: this.game.player.pixelY
+            };
 
-        for (const value of Object.values(this.ghosts)) {
-
-            if (this.checkCollision(value, player) && this.game.lives > 0) {
+            if (this.checkCollision(ghost, player) && this.game.lives > 0) {
                 this.game.lives--;
                 this.game.ui.updateLives(this.game.lives);
                 this.game.inGame = false;
-                return
-            }
-        };
+            };
+        }
     }
 
     checkCollision(ghost, player) {
@@ -216,16 +220,14 @@ export class Ghosts {
     }
 
     reset() {
-        for (const [name, value] of Object.entries(this.ghosts)) {
-
-            value.gridX = name === 'red' || name === 'orange'? 4: 17;
-            value.gridY = name === 'red' || name === 'bleu'? 5: 15;
-
-            value.pixelX = this.game.gridToPixels(value.gridX);
-            value.pixelY = this.game.gridToPixels(value.gridY);
-
-            value.direction = name === 'red' || name === 'orange'? 'right': 'left';
-            value.isMoving = false;
-        };
+        for (const [name, ghost] of Object.entries(this.ghosts)) {
+            const state = this.initialStates[name];
+            ghost.gridX = state.gridX;
+            ghost.gridY = state.gridY;
+            ghost.pixelX = this.game.gridToPixels(state.gridX);
+            ghost.pixelY = this.game.gridToPixels(state.gridY);
+            ghost.direction = state.direction;
+            ghost.isMoving = false;
+        }
     }
 }

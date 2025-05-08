@@ -18,14 +18,8 @@ function setupResponsiveScaling() {
     const gameContainer = document.querySelector('.game-container');
     const subject = document.querySelector('.subject');
 
-    const baseWidth = 420;
-    const baseHeight = 640;
-
-    const availableWidth = gameContainer.clientWidth;
-    const availableHeight = gameContainer.clientHeight;
-
-    const scaleX = availableWidth / baseWidth;
-    const scaleY = availableHeight / baseHeight;
+    const scaleX = gameContainer.clientWidth / 460;  // fullWidth / baseWidth
+    const scaleY = gameContainer.clientHeight / 640; // fullHeight / baseHeight
 
     const scale = Math.min(scaleX, scaleY);
 

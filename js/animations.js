@@ -20,7 +20,6 @@ export class ElementAnimator {
     }
 
     start() {
-        if (this.isAnimating) return
         this.isAnimating = true;
         this.animate();
     }
