@@ -2,7 +2,7 @@
 
 Pac-Man, the classic arcade game released in 1980, is one of the most iconic video games of all time. The goal is simple — guide Pac-Man through a maze, eating dots and avoiding ghosts. Despite its simplicity, Pac-Man’s smooth animation, real-time interactions, and score-based design continue to inspire developers to build creative web-based games. This project will draw on similar principles of user feedback, performance optimization, and real-time updates.
 
-# 🌐 Get-Try **Pac-Man** [Here]().
+# 🌐 Get-Try **Pac-Man** [Here](https://pac-man-smoky.vercel.app/).
 
 ![Pac-Man GIF](https://blog.sciencemuseum.org.uk/wp-content/uploads/2017/10/Pacman.gif)
 
