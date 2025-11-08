@@ -1,8 +1,10 @@
 ## 🟡 Introduction
 
-Pac-Man, the classic arcade game released in 1980, is one of the most iconic video games of all time. The goal is simple — guide Pac-Man through a maze, eating dots and avoiding ghosts. Despite its simplicity, Pac-Man’s smooth animation, real-time interactions, and score-based design continue to inspire developers to build creative web-based games. This project will draw on similar principles of user feedback, performance optimization, and real-time updates — all while using GraphQL to bring dynamic data to life.
+Pac-Man, the classic arcade game released in 1980, is one of the most iconic video games of all time. The goal is simple — guide Pac-Man through a maze, eating dots and avoiding ghosts. Despite its simplicity, Pac-Man’s smooth animation, real-time interactions, and score-based design continue to inspire developers to build creative web-based games. This project will draw on similar principles of user feedback, performance optimization, and real-time updates.
 
-![Pac-Man GIF](https://media.giphy.com/media/26ufdipQqU2lhNA4g/giphy.gif)
+# 🌐 Get-Try **Pac-Man** [Here]().
+
+![Pac-Man GIF](https://blog.sciencemuseum.org.uk/wp-content/uploads/2017/10/Pacman.gif)
 
 
 ## 🎮 make-your-game
