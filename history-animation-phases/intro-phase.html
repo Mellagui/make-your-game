@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Intro – Save Pacwomen</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .world {
+      position: relative;
+      width: 800px;
+      height: 400px;
+      border: 3px solid #fff;
+      background: #000020;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .character {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      transition: all 1s ease;
+    }
+
+    /* pacman (hero) */
+    #hero {
+      border-radius: 50%;
+      background: #ffd700;   /* sfar */
+      left: 55%;
+      top: 60%;
+    }
+
+    /* pacwomen */
+    #pacwomen {
+      border-radius: 50%;
+      background: #ff3333;   /* 7mer */
+      left: 65%;
+      top: 60%;
+      transition: all 0.5s ease, opacity 0.5s ease;
+    }
+
+    /* ghosts (rectangles zraq) */
+    .ghost {
+      width: 35px;
+      height: 55px;
+      background: #007bff;   /* zre9 */
+      border-radius: 6px;
+      top: 55%;
+      left: 105%;            /* barra 3la yemin */
+    }
+
+    #ghost1 { top: 45%; }
+    #ghost2 { top: 55%; }
+    #ghost3 { top: 65%; }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+    }
+
+    button {
+      padding: 8px 16px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+    }
+
+    #continueBtn {
+      background: #1e90ff;
+      color: #fff;
+    }
+
+    #saveBtn {
+      background: #28a745;
+      color: #fff;
+      display: none;
+    }
+
+    .message {
+      margin-top: 8px;
+      min-height: 24px;
+      text-align: center;
+      font-size: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="world">
+    <!-- Pacman (hero) -->
+    <div id="hero" class="character"></div>
+
+    <!-- Pacwomen -->
+    <div id="pacwomen" class="character"></div>
+
+    <!-- Ghosts -->
+    <div id="ghost1" class="character ghost"></div>
+    <div id="ghost2" class="character ghost"></div>
+    <div id="ghost3" class="character ghost"></div>
+  </div>
+
+  <div class="controls">
+    <button id="continueBtn">Continue</button>
+    <button id="saveBtn">Save Pacwomen</button>
+  </div>
+
+  <div class="message" id="message">
+    Pacman wa9ef 7da Pacwomen, kolshi zen...
+  </div>
+
+  <script>
+    const hero = document.getElementById('hero');
+    const pacwomen = document.getElementById('pacwomen');
+    const ghost1 = document.getElementById('ghost1');
+    const ghost2 = document.getElementById('ghost2');
+    const ghost3 = document.getElementById('ghost3');
+
+    const continueBtn = document.getElementById('continueBtn');
+    const saveBtn = document.getElementById('saveBtn');
+    const message = document.getElementById('message');
+
+    let step = 0;
+
+    function runStep() {
+      step++;
+
+      if (step === 1) {
+        // STEP 1: pacman ymchi left w ykhlli pacwomen بوحدها
+        message.textContent = "Pacman khlla Pacwomen w mcha chi chwiya l-left...";
+        hero.style.left = "30%";   // ymchi left
+      }
+
+      else if (step === 2) {
+        // STEP 2: ghosts ydkhlo men yemin 7da pacwomen
+        message.textContent = "Ghosts jaou men yemin 7da Pacwomen...";
+        ghost1.style.left = "70%";
+        ghost2.style.left = "75%";
+        ghost3.style.left = "80%";
+      }
+
+      else if (step === 3) {
+        // STEP 3: ghosts khatfou pacwomen (katختafi)
+        message.textContent = "Ghosts khatafou Pacwomen! Pacman shaf chno wa9e3...";
+        pacwomen.style.opacity = "0"; // tختafi
+      }
+
+      else if (step === 4) {
+        // STEP 4: ghosts kayharbou l-yemin, pacman kayl7a9hom 9bel maykhrjo
+        message.textContent = "Ghosts kayharbou l-yemin, Pacman kayl7a9hom!";
+        ghost1.style.left = "95%";
+        ghost2.style.left = "100%";
+        ghost3.style.left = "105%";
+        hero.style.left = "85%"; // yjري warahom
+      }
+
+      else if (step === 5) {
+        // END: ban button dyal Save Pacwomen
+        message.textContent = "Daba t9der tbda l-game: Save Pacwomen!";
+        continueBtn.style.display = "none";
+        saveBtn.style.display = "inline-block";
+      }
+    }
+
+    continueBtn.addEventListener('click', runStep);
+
+    saveBtn.addEventListener('click', () => {
+      // hna t9der t3ayet l-function dyal start level f game dyalek
+      // b7al: startLevel1(); wlla redirect l canvas...
+      alert("Here you can start the level: Save Pacwomen!");
+    });
+  </script>
+
+</body>
+</html>

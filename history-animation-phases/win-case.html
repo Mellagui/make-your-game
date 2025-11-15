@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Phase 4 – You Win</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .world {
+      position: relative;
+      width: 800px;
+      height: 400px;
+      border: 3px solid #fff;
+      background: #000020;
+      overflow: hidden;
+      margin-bottom: 16px;
+      transition: background 0.7s ease, box-shadow 0.7s ease;
+    }
+
+    .world.win {
+      background: #001f10;
+      box-shadow: 0 0 25px rgba(0,255,100,0.7);
+    }
+
+    .character {
+      position: absolute;
+      transition: all 1s ease, opacity 0.7s ease;
+    }
+
+    /* Pacman – da2ira ssefra */
+    #pacman {
+      width: 40px;
+      height: 40px;
+      background: #ffd700;
+      border-radius: 50%;
+      left: -15%;
+      top: 60%;
+    }
+
+    /* Pacwomen – da2ira 7emra */
+    #pacwomen {
+      width: 40px;
+      height: 40px;
+      background: #ff3333;
+      border-radius: 50%;
+      left: 95%;
+      top: 60%;
+      opacity: 0; /* bdaya mkhtafiya */
+    }
+
+    /* Ghosts – rectangles zraq */
+    .ghost {
+      width: 35px;
+      height: 55px;
+      background: #007bff;
+      border-radius: 6px;
+      position: absolute;
+      animation: floatGhost 2s ease-in-out infinite;
+      opacity: 0; /* bdaya mkhtafiin 7it 3la portal */
+    }
+
+    #g1 { left: 90%; top: 45%; animation-delay: 0s; }
+    #g2 { left: 92%; top: 55%; animation-delay: 0.2s; }
+    #g3 { left: 94%; top: 65%; animation-delay: 0.4s; }
+
+    @keyframes floatGhost {
+      0%   { transform: translateY(0); }
+      50%  { transform: translateY(-10px); }
+      100% { transform: translateY(0); }
+    }
+
+    /* portal f right */
+    #portal {
+      position: absolute;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      border: 4px solid #6a5acd;
+      right: 2%;
+      top: 50%;
+      transform: translateY(-50%);
+      box-shadow: 0 0 20px rgba(106,90,205,0.8);
+      background: radial-gradient(circle at center, rgba(106,90,205,0.6), transparent);
+      opacity: 0.7;
+      transition: box-shadow 0.7s ease, opacity 0.7s ease;
+    }
+
+    /* text dyal win */
+    .win-text {
+      position: absolute;
+      top: 15px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 28px;
+      letter-spacing: 2px;
+      color: #00ff88;
+      text-shadow: 0 0 10px rgba(0,255,136,0.9);
+      opacity: 0;
+      transition: opacity 1s ease;
+    }
+
+    /* small bounce f l-akhir */
+    @keyframes bounce {
+      0%   { transform: translateY(0); }
+      30%  { transform: translateY(-10px); }
+      60%  { transform: translateY(0); }
+      100% { transform: translateY(-4px); }
+    }
+
+    .celebrate {
+      animation: bounce 0.8s ease-out forwards;
+    }
+
+    button {
+      padding: 8px 18px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+      cursor: pointer;
+      margin: 4px;
+    }
+
+    #continueBtn {
+      background: #1e90ff;
+      color: #fff;
+    }
+
+    #nextWorldBtn {
+      background: #28a745;
+      color: #fff;
+      display: none;
+    }
+
+    .message {
+      margin-top: 8px;
+      height: 24px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="world" id="world">
+    <div id="winLabel" class="win-text">YOU SAVED PACWOMEN</div>
+
+    <!-- Pacman -->
+    <div id="pacman" class="character"></div>
+
+    <!-- Pacwomen -->
+    <div id="pacwomen" class="character"></div>
+
+    <!-- Ghosts -->
+    <div id="g1" class="ghost"></div>
+    <div id="g2" class="ghost"></div>
+    <div id="g3" class="ghost"></div>
+
+    <!-- Portal -->
+    <div id="portal"></div>
+  </div>
+
+  <div>
+    <button id="continueBtn">Continue</button>
+    <button id="nextWorldBtn">Next World</button>
+  </div>
+
+  <div class="message" id="msg">
+    Portal t7ell f right... chi 7aja ghadi tkhrej men 3alam ghosts.
+  </div>
+
+  <script>
+    const world = document.getElementById("world");
+    const pacman = document.getElementById("pacman");
+    const pacwomen = document.getElementById("pacwomen");
+    const g1 = document.getElementById("g1");
+    const g2 = document.getElementById("g2");
+    const g3 = document.getElementById("g3");
+    const portal = document.getElementById("portal");
+    const winLabel = document.getElementById("winLabel");
+
+    const msg = document.getElementById("msg");
+    const continueBtn = document.getElementById("continueBtn");
+    const nextWorldBtn = document.getElementById("nextWorldBtn");
+
+    let step = 0;
+
+    continueBtn.onclick = () => {
+      step++;
+
+      if (step === 1) {
+        // ghosts + pacwomen kaybano men portal
+        msg.textContent = "Ghosts khrejou men portal m3a Pacwomen...";
+        g1.style.opacity = "1";
+        g2.style.opacity = "1";
+        g3.style.opacity = "1";
+        pacwomen.style.opacity = "1";
+
+        g1.style.left = "78%";
+        g2.style.left = "80%";
+        g3.style.left = "82%";
+        pacwomen.style.left = "76%";
+
+        portal.style.boxShadow = "0 0 30px rgba(106,90,205,1)";
+      }
+
+      else if (step === 2) {
+        // pacman kaydkhol men left
+        msg.textContent = "Pacman rje3 men left, had marra machi bash yfchel!";
+        pacman.style.left = "15%";
+      }
+
+      else if (step === 3) {
+        // pacman y9arrab l nos, ghosts kaytkhll3o (ybdlou pos)
+        msg.textContent = "Pacman 9arrab... ghosts tkhll3o w bghaw yharbou!";
+        pacman.style.left = "40%";
+
+        g1.style.left = "85%";
+        g2.style.left = "88%";
+        g3.style.left = "91%";
+        pacwomen.style.left = "72%";
+      }
+
+      else if (step === 4) {
+        // ghosts kaydkhlo l-portal w yختafiw, pacwomen t9arrab l pacman
+        msg.textContent = "Ghosts t3a9bou w trmew l dak l3alam dyalhom, b9at gheir Pacwomen!";
+        g1.style.left = "92%";
+        g2.style.left = "94%";
+        g3.style.left = "96%";
+
+        g1.style.opacity = "0";
+        g2.style.opacity = "0";
+        g3.style.opacity = "0";
+
+        pacwomen.style.left = "50%";
+        pacman.style.left = "42%";
+      }
+
+      else if (step === 5) {
+        // Win state
+        msg.textContent = "Bravo! Nje7ti w n9iti Pacwomen. 👏";
+        world.classList.add("win");
+        winLabel.style.opacity = "1";
+
+        pacman.classList.add("celebrate");
+        pacwomen.classList.add("celebrate");
+
+        continueBtn.style.display = "none";
+        nextWorldBtn.style.display = "inline-block";
+      }
+    };
+
+    nextWorldBtn.onclick = () => {
+      // hna t3ayet l next world / ending screen
+      // ex: window.location.href = "world2.html";
+      alert("Here you can go to the next world / final credits!");
+    };
+  </script>
+
+</body>
+</html>

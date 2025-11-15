@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Phase 2 Transition</title>
+<style>
+  body {
+    background: #000;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+  }
+
+  .world {
+    position: relative;
+    width: 800px;
+    height: 400px;
+    border: 3px solid white;
+    overflow: hidden;
+    background: #000020;
+    margin-bottom: 15px;
+  }
+
+  .character {
+    position: absolute;
+    transition: all 1s ease;
+  }
+
+  /* Pacman (da2ira ssefra) */
+  #pacman {
+    width: 40px;
+    height: 40px;
+    background: #ffd700;
+    border-radius: 50%;
+    left: -15%;
+    top: 55%;
+  }
+
+  /* Ghost movement animation */
+  @keyframes floatGhost {
+    0%   { transform: translateY(0); }
+    50%  { transform: translateY(-10px); }
+    100% { transform: translateY(0); }
+  }
+
+  /* Ghosts (rectangles zraq) */
+  .ghost {
+    width: 35px;
+    height: 55px;
+    background: #007bff;
+    border-radius: 5px;
+    position: absolute;
+    animation: floatGhost 2s ease-in-out infinite;
+  }
+
+  #g1 { left: 75%; top: 40%; animation-delay: 0s; }
+  #g2 { left: 80%; top: 55%; animation-delay: 0.3s; }
+  #g3 { left: 85%; top: 70%; animation-delay: 0.6s; }
+
+  button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 5px;
+  }
+
+  #continueBtn {
+    background: #1e90ff;
+    color: #fff;
+  }
+
+  #nextBtn {
+    background: #28a745;
+    color: #fff;
+    display: none;
+  }
+
+  .message {
+    height: 25px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="world">
+  <div id="pacman" class="character"></div>
+
+  <div id="g1" class="ghost"></div>
+  <div id="g2" class="ghost"></div>
+  <div id="g3" class="ghost"></div>
+</div>
+
+<button id="continueBtn">Continue</button>
+<button id="nextBtn">Next Level</button>
+
+<div class="message" id="msg">Ghosts kayt7arrkou w kaytsennaw f right... Pacman ghadi yedkhol daba.</div>
+
+<script>
+  const pacman = document.getElementById("pacman");
+  const g1 = document.getElementById("g1");
+  const g2 = document.getElementById("g2");
+  const g3 = document.getElementById("g3");
+
+  const msg = document.getElementById("msg");
+  const continueBtn = document.getElementById("continueBtn");
+  const nextBtn = document.getElementById("nextBtn");
+
+  let step = 0;
+
+  continueBtn.onclick = () => {
+    step++;
+
+    if (step === 1) {
+      msg.textContent = "Pacman dkhel men left...";
+      pacman.style.left = "10%";
+    }
+
+    else if (step === 2) {
+      msg.textContent = "Pacman 9arrab menhom... ghosts tkhll3o!";
+      pacman.style.left = "35%";
+    }
+
+    else if (step === 3) {
+      msg.textContent = "Ghosts harbou men right!";
+      g1.style.left = "105%";
+      g2.style.left = "110%";
+      g3.style.left = "115%";
+    }
+
+    else if (step === 4) {
+      msg.textContent = "Pacman kayl7a9hom!";
+      pacman.style.left = "80%";
+    }
+
+    else if (step === 5) {
+      msg.textContent = "Ready? Doz l-level li jaya!";
+      continueBtn.style.display = "none";
+      nextBtn.style.display = "inline-block";
+    }
+  };
+
+  nextBtn.onclick = () => {
+    alert("Here you start the next level!");
+  };
+</script>
+
+</body>
+</html>
