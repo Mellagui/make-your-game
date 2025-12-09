@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #000;
+    color: #ffffff;
+    font-family: 'Press Start 2P', cursive;
+
+    /* Pac-Man grid background */
+    background-image:
+        radial-gradient(circle at center, rgba(0, 0, 0, 0.9) 0%, #000000 80%),
+        linear-gradient(#ffffff 2px, transparent 2px),
+        linear-gradient(90deg, #ffffff 2px, transparent 2px);
+
+    background-size:
+        100% 100%,
+        /* radial fade */
+        20px 20px,
+        /* horizontal grid */
+        20px 20px;
+    /* vertical grid */
+
+    background-position: center center;
+
+    background-repeat: no-repeat, repeat, repeat;
+}
+
+/* Game container for scaling */
+.game-container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    background: radial-gradient(circle at center, #111 0%, #000 100%);
+    z-index: 1;
+}
+
+.game-container {
+    background: transparent;
+}
+
+.subject {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    width: auto;
+    min-width: 400px;
+    position: relative;
+    /* border: 4px solid #FFEE58; */
+    border-radius: 10px;
+    /* box-shadow: 0 0 20px rgba(255, 238, 88, 0.3); */
+    background-color: #000;
+    background: transparent;
+    padding: 8px;
+}
+
+/* Title styling */
+.title-game img {
+    width: 100%;
+    height: 6rem;
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.6));
+}
+
+.subject-header,
+.subject-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin: 0.5rem;
+}

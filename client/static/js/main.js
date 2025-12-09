@@ -1,18 +1,14 @@
-import {Game} from './game.js'
+import { Game } from "./core/game.js"
 
-// game instance
 const game = new Game();
 
-document.addEventListener('DOMContentLoaded', () => {
-    // initialize game
+document.addEventListener("DOMContentLoaded", () => {
     game.init();
 
-    // set up responsive scalling
     setupResponsiveScaling();
 
-    // Listen fo window resize events
     window.addEventListener('resize', setupResponsiveScaling)
-})
+});
 
 function setupResponsiveScaling() {
     const gameContainer = document.querySelector('.game-container');

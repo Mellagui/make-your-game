@@ -1,8 +1,8 @@
-import { GameBoard } from './gameBoard.js';
-import { Player } from './player.js';
-import { Ghosts } from './enemy.js';
-import { InputHandler } from './input.js';
-import { UI } from './ui.js';
+import { Controller } from "../input/controller.js";
+import { GameBoard } from "../graphics/gameBoard.js"
+import { Ghosts } from "../entities/ghost.js";
+import { Player } from "../entities/player.js";
+import { UI } from "../ui/ui.js";
 
 export class Game {
     constructor() {
@@ -20,23 +20,19 @@ export class Game {
         this.timeRemaining = 120;
         this.displayedTime = null;
 
-        this.pacmanSpeed = 100;  // 5 cells per second (100/20)
-        this.ghostSpeed = 80;    // 4 cells per second (80/20)
-        this.cellSize = 20;
+        this.pacmanSpeed = 70;  // 5 cells per second (100/20)
+        this.ghostSpeed = 60;    // 4 cells per second (80/20)
 
         this.ui = new UI(this);
         this.gameBoard = new GameBoard(this);
-        this.input = new InputHandler(this);
+        this.controller = new Controller(this);
 
-        this.player = null;
-        this.ghosts = null;
+        this.player = new Player(this);
+        this.ghosts = new Ghosts(this);
 
-        // Animation frame reference
         this.animationFrameId = null;
-
         this.currentMenu = false;
 
-        // In Game constructor
         this.gameLoop = this.gameLoop.bind(this);
     }
 
@@ -45,10 +41,8 @@ export class Game {
 
         this.gameBoard.createBoard();
 
-        // this.setSpeeds(100, 80);
-
-        this.player = new Player(this);
-        this.ghosts = new Ghosts(this);
+        this.player.init();
+        this.ghosts.init();
 
         this.ui.updateScore(this.score);
         this.ui.updateLives(this.lives);
@@ -62,7 +56,7 @@ export class Game {
 
     startGameLoop() {
         this.lastTime = performance.now();
-        this.animationFrameId = requestAnimationFrame((timestamp) => this.gameLoop(timestamp)); //
+        this.animationFrameId = requestAnimationFrame(this.gameLoop);
     }
 
     cancelGameLoop() {
@@ -87,52 +81,46 @@ export class Game {
                 this.ui.updateTimer(this.displayedTime);
             };
 
-            this.player.update(this.deltaTime);
+            if (this.player) this.player.update(this.deltaTime);
 
-            this.ghosts.update(this.deltaTime);
-
-            this.ghosts.checkCollisionWithPlayer();
+            if (this.ghosts) {
+                this.ghosts.update(this.deltaTime);
+                this.ghosts.checkCollisionWithPlayer();
+            }
         }
 
         if (!this.currentMenu) this.checkGameState();
 
-        // Continue the game loop
-        this.animationFrameId = requestAnimationFrame((timestamp) => this.gameLoop(timestamp));
+        this.animationFrameId = requestAnimationFrame(this.gameLoop);
     }
 
     checkGameState() {
-        if (this.score >= this.maxScore /* 100 */) {
+        if (this.score >= this.maxScore && this.maxScore > 0) {
             this.victory = true;
             this.ui.showMenu('win');
-
-            console.log('victory');
             return
         } else if (this.timeRemaining <= 0 || this.lives === 0) {
             this.gameOver = true;
             this.ui.showMenu('game over');
-
-            console.log('defeat');
             return
         }
 
         if (this.pause) {
             this.ui.showMenu('game pause');
-            console.log('pause');
 
         } else if (!this.inGame) {
             this.ui.showMenu('continue');
-            console.log('life -1');
         }
     }
 
-    ToggelePause() {
+    togglePause() {
         if (this.pause) this.ui.hideMenu();
-        this.pause = this.pause? false: true;
+        this.pause = this.pause ? false : true;
     }
 
     resetPosition() {
-        this.player.reset();
-        this.ghosts.reset();
+        if (this.player) this.player.reset();
+        if (this.ghosts) this.ghosts.reset();
     }
 
     resetGame() {
@@ -148,18 +136,5 @@ export class Game {
 
         console.log('game restarted')
         this.init();
-    }
-
-    pixelsToGrid(pixels) {
-        return Math.round(pixels / this.cellSize);
-    }
-
-    gridToPixels(grid) {
-        return grid * this.cellSize;
-    }
-
-    setSpeeds(pacmanSpeed, ghostSpeed) {
-        this.pacmanSpeed = pacmanSpeed;
-        this.ghostSpeed = ghostSpeed;
     }
 }

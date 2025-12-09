@@ -1,6 +1,7 @@
-export class InputHandler {
+export class Controller {
     constructor(game) {
         this.game = game;
+
         this.directions = {
             'ArrowUp': 'up',
             'ArrowDown': 'down',
@@ -17,7 +18,7 @@ export class InputHandler {
 
         document.getElementById('continue').addEventListener('click', () => {
             if (this.game.inGame && !this.game.victory && !this.game.gameOver) {
-                this.game.ToggelePause();
+                this.game.togglePause();
                 return
             }
 
@@ -32,7 +33,7 @@ export class InputHandler {
 
         document.addEventListener('keydown', e => {
             if ((e.key === ' ' || e.key === 'p') && this.game.inGame && !this.game.victory && !this.game.gameOver) {
-                this.game.ToggelePause();
+                this.game.togglePause();
                 return
             }
 
