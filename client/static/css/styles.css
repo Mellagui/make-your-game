@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+7@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
 * {
     margin: 0;
@@ -79,4 +79,45 @@ body {
     align-items: center;
     width: 100%;
     margin: 0.5rem;
+}
+
+.mobile-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+    user-select: none; /* Prevents text selection while tapping */
+}
+
+.control-row {
+    display: flex;
+    gap: 10px;
+}
+
+.control-btn {
+    width: 60px;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border: 2px solid #f8ea48; /* Pacman Yellow */
+    border-radius: 12px;
+    color: #f8ea48;
+    font-size: 24px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.1s, background-color 0.1s;
+    touch-action: manipulation; /* Optimizes for mobile taps */
+}
+
+.control-btn:active {
+    transform: scale(0.9);
+    background-color: #f8ea48;
+    color: #000;
+}
+
+#btn-pause {
+    border-color: #fff;
+    color: #fff;
 }
