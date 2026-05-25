@@ -11,45 +11,70 @@ export class Controller {
 
         this.setupEventListeners();
     }
+    // Helper for direction buttons
+    const handleDirection = (dir) => {
+        if (!this.game.inGame) {
+            this.game.resetPosition();
+            this.game.ui.hideMenu();
+            this.game.inGame = true;
+        }
+        if (!this.game.currentMenu) {
+            this.game.player.nextDirection = dir;
+        }
+    };
 
-    setupEventListeners() {
+    // Mobile Direction Buttons
+    document.getElementById('btn-up').addEventListener('click', () => handleDirection('up'));
+    document.getElementById('btn-down').addEventListener('click', () => handleDirection('down'));
+    document.getElementById('btn-left').addEventListener('click', () => handleDirection('left'));
+    document.getElementById('btn-right').addEventListener('click', () => handleDirection('right'));
 
-        document.getElementById('reset').addEventListener('click', () => this.game.resetGame());
+    // Mobile Pause/Start Button
+    document.getElementById('btn-pause').addEventListener('click', () => {
+        if (this.game.inGame && !this.game.victory && !this.game.gameOver) {
+            this.game.togglePause();
+        } else if (this.game.victory || this.game.gameOver) {
+            this.game.resetGame();
+        }
+    });
+    // setupEventListeners() {
 
-        document.getElementById('continue').addEventListener('click', () => {
-            if (this.game.inGame && !this.game.victory && !this.game.gameOver) {
-                this.game.togglePause();
-                return
-            }
+        //document.getElementById('reset').addEventListen//er('click', () => this.game.resetGame());
 
-            if (!this.game.inGame) {
-                this.game.resetPosition();
-                this.game.ui.hideMenu();
-                this.game.inGame = true;
+        //document.getElementById('continue').addEventLis//tener('click', () => {
+           // if (this.game.inGame && !this.game.victory && !this.game.gameOver) {
+               // this.game.togglePause();
+            //    return
+         //   }
 
-                console.log('continue');
-            }
-        });
+          //  if (!this.game.inGame) {
+          //      this.game.resetPosition();
+           //     this.game.ui.hideMenu();
+            //    this.game.inGame = true;
 
-        document.addEventListener('keydown', e => {
-            if ((e.key === ' ' || e.key === 'p') && this.game.inGame && !this.game.victory && !this.game.gameOver) {
-                this.game.togglePause();
-                return
-            }
+             //   console.log('continue');
+       //     }
+    //    });
 
-            if (this.game.victory || this.game.gameOver) {
-                this.game.resetGame();
-                return
+      //  document.addEventListener('keydown', e => {
+          //  if ((e.key === ' ' || e.key === 'p') && this.game.inGame && !this.game.victory && !this.game.gameOver) {
+               // this.game.togglePause();
+            //    return
+         //   }
 
-            } else if (!this.game.inGame) {
-                this.game.resetPosition();
-                this.game.ui.hideMenu();
-                this.game.inGame = true;
+          //  if (this.game.victory || this.game.gameOver) {
+             //   this.game.resetGame();
+             //   return
 
-                console.log('game started');
-            }
+         //   } else if (!this.game.inGame) {
+           //     this.game.resetPosition();
+            //    this.game.ui.hideMenu();
+            //    this.game.inGame = true;
 
-            if (!this.game.currentMenu && this.directions[e.key]) this.game.player.nextDirection = this.directions[e.key];
-        });
+            //    console.log('game started');
+          //  }
+
+           // if (!this.game.currentMenu && //this.directions[e.key]) //this.game.player.nextDirection = //this.directions[e.key];
+       // });
     }
 }
